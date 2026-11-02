@@ -1,6 +1,6 @@
-# 🏛️ JanSamadhan — Grievance Redressal for a Better Odisha
+# 🏛️ JanSamadhan — Multilingual Citizen Grievance Redressal Portal
 
-An intelligent, AI-powered multilingual civic grievance redressal and public tracking portal built for Odisha municipal governance. Empowering citizens to report infrastructure failures and public service issues in **English, Hindi (हिन्दी), and Odia (ଓଡ଼ିଆ)** without bureaucratic friction.
+An intelligent, AI-powered multilingual civic grievance redressal and public tracking portal. Empowering citizens across India to report infrastructure failures and public service issues in **English, Hindi (हिन्दी), Odia (ଓଡ଼ିଆ), Marathi (मराठी), Telugu (తెలుగు), and other Indian languages** without bureaucratic friction.
 
 ---
 
@@ -20,7 +20,7 @@ Citizens often face major hurdles when reporting civic emergencies—bureaucrati
 
 | Capability | Description |
 | :--- | :--- |
-| 🗣️ **Multilingual Conversational AI** | Native understanding for English, Hindi, and Odia with Indic numeral support (`०-९`, `୦-୯`). |
+| 🗣️ **Multilingual Conversational AI** | Native understanding for English, Hindi, Odia, Marathi, Telugu, Tamil, and Bengali with Indic numeral support (`०-९`, `୦-୯`). |
 | ⚡ **Zero-LLM Local Semantic Router** | FastEmbed (`bge-small-en-v1.5`) local classifier routing complaints to the correct department in <50ms. |
 | 🛡️ **Provider-Resilient LLM Engine** | High-speed Groq (`llama-3.3-70b-versatile`) extraction with automatic fallback to Google Gemini (`gemini-2.5-flash`). |
 | 🚨 **Urgency & Danger Detection** | Scans for Indic hazard keywords to assign Critical/High priority and strict resolution SLAs. |
@@ -59,8 +59,8 @@ JanSamadhan-AI/
 │   ├── icons.py         # Self-contained SVG icon registry
 │   └── views/           # Multi-page views (chat, tracking, staff portal)
 ├── data/
-│   └── departments.json # 10 Odisha municipal department taxonomy
-├── locales/             # Multilingual string dictionaries (en, hi, or)
+│   └── departments.json # 10 municipal & civic department taxonomy
+├── locales/             # Multilingual string dictionaries (en, hi, or, mr, ta, bn)
 ├── scripts/             # Demo data seeders and helper scripts
 ├── tests/               # 83 automated unit and integration tests
 ├── requirements.txt     # Python dependencies
@@ -127,5 +127,5 @@ python -m unittest discover tests
 
 ---
 
-## 🏛️ Government of Odisha Civic Initiative
-Built with ❤️ for a better, more responsive, and digitally empowered Odisha.
+## 🇮🇳 Digital Public Infrastructure Initiative
+Built with ❤️ for responsive, transparent, and digitally empowered citizen governance.
