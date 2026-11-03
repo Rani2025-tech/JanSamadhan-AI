@@ -13,4 +13,7 @@ helpdesk.db
 *.log
 .vscode/
 .idea/
+.streamlit/secrets.toml
+scratch/
+screenshot_*.png
 # faiss_index/ and data/ are intentionally NOT ignored — required for deployment
