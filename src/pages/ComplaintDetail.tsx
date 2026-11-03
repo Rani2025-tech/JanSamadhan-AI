@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -21,7 +21,8 @@ import { useComplaints } from '../context/ComplaintContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StatusBadge } from '../components/common/StatusBadge';
-import { ComplaintStatus } from '../types';
+import { Complaint, ComplaintStatus } from '../types';
+import { api } from '../services/api';
 
 export const ComplaintDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,7 +31,32 @@ export const ComplaintDetail: React.FC = () => {
   const { role, user } = useAuth();
   const { t } = useLanguage();
 
-  const complaint = getComplaintById(id || '');
+  const contextComplaint = getComplaintById(id || '');
+  const [complaint, setComplaint] = useState<Complaint | undefined>(contextComplaint);
+  const [loadingComp, setLoadingComp] = useState(!contextComplaint);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (contextComplaint) {
+      setComplaint(contextComplaint);
+      setLoadingComp(false);
+      return;
+    }
+    if (id) {
+      setLoadingComp(true);
+      api.getComplaintById(id)
+        .then(data => {
+          setComplaint(data);
+          setErrorMsg(null);
+        })
+        .catch(err => {
+          setErrorMsg('You do not have permission to view this grievance, or it does not exist.');
+        })
+        .finally(() => {
+          setLoadingComp(false);
+        });
+    }
+  }, [id, contextComplaint]);
 
   // Admin status update modal / form state
   const [adminStatus, setAdminStatus] = useState<ComplaintStatus>('In Progress');
@@ -42,13 +68,22 @@ export const ComplaintDetail: React.FC = () => {
   const [feedbackComment, setFeedbackComment] = useState(complaint?.feedback?.comment || '');
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(!!complaint?.feedback);
 
-  if (!complaint) {
+  if (loadingComp) {
+    return (
+      <div className="bg-white rounded-3xl p-12 text-center border border-maroon-100 shadow-soft max-w-xl mx-auto my-12 animate-pulse space-y-4">
+        <div className="h-8 bg-cream-200 rounded-xl w-48 mx-auto" />
+        <div className="h-4 bg-cream-100 rounded w-64 mx-auto" />
+      </div>
+    );
+  }
+
+  if (errorMsg || !complaint) {
     return (
       <div className="bg-white rounded-3xl p-12 text-center border border-maroon-100 shadow-soft space-y-4 max-w-xl mx-auto my-12">
         <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
-        <h2 className="text-xl font-bold text-gray-900">Grievance Not Found</h2>
+        <h2 className="text-xl font-bold text-gray-900">Grievance Not Found or Access Denied</h2>
         <p className="text-sm text-gray-500">
-          The requested complaint ID <strong className="text-maroon-800">{id}</strong> does not exist in the system.
+          The requested complaint ID <strong className="text-maroon-800">{id}</strong> does not belong to your account or does not exist.
         </p>
         <button
           onClick={() => navigate('/complaints')}

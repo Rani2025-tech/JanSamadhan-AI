@@ -109,7 +109,18 @@ export const NotificationsPage: React.FC = () => {
         {filtered.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-maroon-100 shadow-soft space-y-3">
             <Bell className="w-10 h-10 text-gray-300 mx-auto" />
-            <p className="text-sm font-bold text-gray-700">No notifications in this category</p>
+            <p className="text-sm font-bold text-gray-700">
+              {activeFilter === 'update'
+                ? 'No grievance updates yet'
+                : activeFilter === 'announcement'
+                ? 'No official announcements yet'
+                : 'No notifications yet'}
+            </p>
+            <p className="text-xs text-gray-500 max-w-sm mx-auto">
+              {activeFilter === 'update'
+                ? 'When an assigned officer reviews or resolves your grievance, you will receive real-time alerts here.'
+                : 'System alerts and department notices will appear here.'}
+            </p>
           </div>
         ) : (
           filtered.map(item => {

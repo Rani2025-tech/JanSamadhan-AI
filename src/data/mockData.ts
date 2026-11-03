@@ -8,7 +8,6 @@ export const INITIAL_USER: UserProfile = {
   role: 'citizen',
   language: 'or',
   district: 'Ganjam',
-  avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
 };
 
 export const ADMIN_USER: UserProfile = {

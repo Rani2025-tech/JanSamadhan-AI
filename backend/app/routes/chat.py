@@ -1,26 +1,33 @@
 import json
 import uuid
 import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import ChatSession, ChatMessage, Complaint, StatusHistory, Notification
+from app.models import ChatSession, ChatMessage, Complaint, StatusHistory, Notification, User
 from app.schemas import ChatInteractionRequest, ChatInteractionResponse, ComplaintResponse
 from app.routes.complaints import format_complaint_response
+from app.routes.auth import get_current_user
 from ai import slot_filling_assistant
 
 router = APIRouter(prefix="/chat", tags=["AI Chat"])
 
 @router.post("/message", response_model=ChatInteractionResponse)
-def handle_chat_message(req: ChatInteractionRequest, db: Session = Depends(get_db)):
-    # 1. Retrieve or initialize chat session
+def handle_chat_message(
+    req: ChatInteractionRequest,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     session_id = req.session_id or f"CHAT-{uuid.uuid4().hex[:12]}"
     chat_session = db.query(ChatSession).filter(ChatSession.id == session_id).first()
+
+    actual_user_id = current_user.id if current_user else (req.user_id or f"guest_{session_id}")
 
     if not chat_session:
         chat_session = ChatSession(
             id=session_id,
-            user_id=req.user_id or "USR-8921",
+            user_id=actual_user_id,
             language=req.language or "or",
             state="collecting",
             slots_json="{}"
@@ -28,6 +35,14 @@ def handle_chat_message(req: ChatInteractionRequest, db: Session = Depends(get_d
         db.add(chat_session)
         db.commit()
         db.refresh(chat_session)
+    else:
+        # Access control: ensure another user cannot hijack this session
+        if current_user and current_user.role != "admin" and chat_session.user_id:
+            if chat_session.user_id != current_user.id and not chat_session.user_id.startswith("guest_"):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Forbidden: You do not have access to this chat session."
+                )
 
     existing_slots = {}
     try:
@@ -88,30 +103,30 @@ def handle_chat_message(req: ChatInteractionRequest, db: Session = Depends(get_d
         new_comp = Complaint(
             id=new_id,
             title=updated_slots.get("issue", "Civic grievance")[:60],
-            description=updated_slots.get("issue", "Reported via AI Assistant"),
-            category=updated_slots.get("category", "Water Supply"),
-            sub_category=f"{updated_slots.get('category')} Issue",
-            department=updated_slots.get("department", "PHED"),
+            description=req.message,
+            category=updated_slots.get("category", "General Administration"),
+            sub_category=updated_slots.get("sub_category", "Public Grievance"),
+            department=updated_slots.get("department", "General Administration"),
             urgency=urgency,
-            language=req.language or "Odia",
+            language=chat_session.language or "English",
             status="Submitted",
             state=updated_slots.get("state", "Odisha"),
-            district=updated_slots.get("district", "Ganjam"),
-            area=updated_slots.get("area", "Central Area"),
-            lat=20.2961,
-            lng=85.8245,
+            district=updated_slots.get("district", "Khurda"),
+            area=updated_slots.get("area", "Ward Area"),
+            pincode=updated_slots.get("pincode", "751001"),
             submitted_date=sub_date,
             expected_date=exp_date,
             days_remaining=sla_days,
-            user_id=chat_session.user_id or "USR-8921",
-            citizen_phone="9876543210",
-            assigned_officer_name=f"Duty Desk ({updated_slots.get('department')})",
-            assigned_officer_designation="Intake Desk Officer",
-            assigned_officer_dept=updated_slots.get("department"),
-            ai_confidence=0.96,
-            translated_text_en=updated_slots.get("translated_text_en"),
-            sentiment=updated_slots.get("sentiment", "Frustrated"),
-            ai_summary=updated_slots.get("summary"),
+            user_id=actual_user_id if not actual_user_id.startswith("guest_") else None,
+            citizen_phone=current_user.phone if (current_user and current_user.phone) else None,
+            assigned_officer_name=f"Desk Officer ({updated_slots.get('department', 'General Administration')})",
+            assigned_officer_designation="AI Intake Routing Desk",
+            assigned_officer_dept=updated_slots.get("department", "General Administration"),
+            ai_confidence=0.92,
+            needs_human_review=False,
+            translated_text_en=req.message,
+            sentiment="Neutral",
+            ai_summary=f"{updated_slots.get('category')} filed at {updated_slots.get('area')}, {updated_slots.get('district')}.",
             source="ai_assistant"
         )
         db.add(new_comp)
@@ -122,25 +137,27 @@ def handle_chat_message(req: ChatInteractionRequest, db: Session = Depends(get_d
             status="Submitted",
             date=sub_date,
             time=now.strftime("%I:%M %p"),
-            officer="AI Intake Assistant",
-            note=f"Grievance recorded via conversational slot filling in {req.language}.",
+            officer="AI Conversational Assistant",
+            note=f"Grievance recorded via chat assistant and routed to {new_comp.department}.",
             completed=True,
             current=True
         )
         db.add(hist)
 
-        # Notification
-        notif = Notification(
-            id=f"NOTIF-{int(now.timestamp() * 1000)}",
-            user_id=chat_session.user_id or "USR-8921",
-            title=f"Grievance Filed: {new_id}",
-            message=f"Your ticket {new_id} ({new_comp.category}) has been submitted to {new_comp.department}.",
-            type="update",
-            read=False,
-            related_grv_id=new_id,
-            timestamp_str=f"{sub_date} • {now.strftime('%I:%M %p')}"
-        )
-        db.add(notif)
+        # Scoped notification for user
+        if not actual_user_id.startswith("guest_"):
+            notif = Notification(
+                id=f"NOTIF-{int(now.timestamp() * 1000)}",
+                user_id=actual_user_id,
+                title=f"Grievance Registered: {new_id}",
+                message=f"Your complaint regarding {new_comp.category} has been registered via AI Assistant. Target SLA: {exp_date}.",
+                type="update",
+                read=False,
+                related_grv_id=new_id,
+                timestamp_str=f"{sub_date} • {now.strftime('%I:%M %p')}"
+            )
+            db.add(notif)
+
         db.commit()
         db.refresh(new_comp)
 
@@ -170,10 +187,21 @@ def handle_chat_message(req: ChatInteractionRequest, db: Session = Depends(get_d
     )
 
 @router.get("/session/{session_id}")
-def get_chat_session(session_id: str, db: Session = Depends(get_db)):
+def get_chat_session(
+    session_id: str,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     chat_session = db.query(ChatSession).filter(ChatSession.id == session_id).first()
     if not chat_session:
         raise HTTPException(status_code=404, detail="Chat session not found")
+
+    if current_user and current_user.role != "admin" and chat_session.user_id:
+        if chat_session.user_id != current_user.id and not chat_session.user_id.startswith("guest_"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Forbidden: You do not have access to this chat session."
+            )
 
     messages = [
         {"sender": m.sender, "text": m.text, "created_at": m.created_at.isoformat()}
@@ -186,4 +214,3 @@ def get_chat_session(session_id: str, db: Session = Depends(get_db)):
         "slots": json.loads(chat_session.slots_json),
         "messages": messages
     }
-

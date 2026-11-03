@@ -45,7 +45,7 @@ export const BottomNav: React.FC = () => {
           <Bell className="w-5 h-5 mb-0.5" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-2 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-red-600 text-white text-[9px] font-bold">
-              {unreadCount}
+              {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </div>

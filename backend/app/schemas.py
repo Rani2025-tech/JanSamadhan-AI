@@ -170,7 +170,7 @@ class ChatInteractionResponse(BaseModel):
     suggest_human_agent: bool = False
     confirmation_card: Optional[Dict[str, Any]] = None
     filed_complaint: Optional[ComplaintResponse] = None
-    detected_faq: Optional[Dict[str, str]] = None
+    detected_faq: Optional[Dict[str, Any]] = None
 
 # --- Admin Stats Schemas ---
 class AdminStatsResponse(BaseModel):

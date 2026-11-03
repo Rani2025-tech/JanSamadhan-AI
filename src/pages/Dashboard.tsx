@@ -27,7 +27,7 @@ import { StatusBadge } from '../components/common/StatusBadge';
 
 export const Dashboard: React.FC = () => {
   const { t } = useLanguage();
-  const { complaints, userStats } = useComplaints();
+  const { complaints, userStats, loading } = useComplaints();
   const { userUpdates, announcements } = useNotifications();
   const navigate = useNavigate();
 
@@ -185,8 +185,14 @@ export const Dashboard: React.FC = () => {
               {t('statAvgTime')}
             </div>
             <div className="text-2xl font-black text-gray-900">
-              {userStats.avgResolutionDays}{' '}
-              <span className="text-xs font-bold text-gray-500">{t('statDays')}</span>
+              {userStats.resolved === 0 ? (
+                '-'
+              ) : (
+                <>
+                  {userStats.avgResolutionDays}{' '}
+                  <span className="text-xs font-bold text-gray-500">{t('statDays')}</span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -288,89 +294,126 @@ export const Dashboard: React.FC = () => {
               </div>
             )}
 
-            {/* 3 Complaint Rows (GRV-1042, GRV-0987, GRV-0951) */}
-            <div className="space-y-3">
-              {displayComplaints.map(comp => {
-                const isWater = comp.category.toLowerCase().includes('water');
-                return (
-                  <div
-                    key={comp.id}
-                    onClick={() => navigate(`/complaints/${comp.id}`)}
-                    className="p-4 rounded-2xl bg-cream-100/50 hover:bg-cream-200/60 border border-maroon-100 hover:border-maroon-300 shadow-xs hover:shadow-soft transition-all duration-200 cursor-pointer group space-y-3"
+            {/* Complaints List or Empty State / Skeleton */}
+            {loading ? (
+              <div className="space-y-3">
+                <div className="h-24 bg-cream-100/70 rounded-2xl animate-pulse" />
+                <div className="h-24 bg-cream-100/70 rounded-2xl animate-pulse" />
+              </div>
+            ) : complaints.length === 0 ? (
+              <div className="py-10 px-4 text-center space-y-4 border border-dashed border-maroon-200/80 rounded-2xl bg-cream-50/50">
+                <div className="w-14 h-14 rounded-full bg-cream-200 text-maroon-800 flex items-center justify-center mx-auto shadow-xs">
+                  <FileEdit className="w-7 h-7" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-base font-extrabold text-gray-900">No complaints yet. File your first grievance</h3>
+                  <p className="text-xs text-gray-600 max-w-sm mx-auto">
+                    Track your grievance in real-time with official SLA turnaround commitments.
+                  </p>
+                </div>
+                <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/assistant')}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-maroon-800 text-white text-xs font-bold hover:bg-maroon-700 shadow-sm transition-all"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-start gap-3">
-                        {/* Icon circle */}
-                        <div
-                          className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                            isWater ? 'bg-maroon-100 text-maroon-800' : 'bg-saffron-100 text-saffron-800'
-                          }`}
-                        >
-                          {isWater ? <Droplet className="w-5 h-5 fill-current" /> : <Flame className="w-5 h-5" />}
-                        </div>
-
-                        <div>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-extrabold text-sm text-gray-900 group-hover:text-maroon-900">
-                              {comp.id}
-                            </span>
-                            <StatusBadge status={comp.status} size="sm" />
+                    <Bot className="w-4 h-4 text-saffron-300" />
+                    <span>File via AI Assistant</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/file-form')}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-maroon-200 text-maroon-900 text-xs font-bold hover:bg-cream-100 shadow-xs transition-all"
+                  >
+                    <FileEdit className="w-4 h-4 text-maroon-800" />
+                    <span>File via Form</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {displayComplaints.map(comp => {
+                  const isWater = comp.category.toLowerCase().includes('water');
+                  return (
+                    <div
+                      key={comp.id}
+                      onClick={() => navigate(`/complaints/${comp.id}`)}
+                      className="p-4 rounded-2xl bg-cream-100/50 hover:bg-cream-200/60 border border-maroon-100 hover:border-maroon-300 shadow-xs hover:shadow-soft transition-all duration-200 cursor-pointer group space-y-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3">
+                          {/* Icon circle */}
+                          <div
+                            className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 ${
+                              isWater ? 'bg-maroon-100 text-maroon-800' : 'bg-saffron-100 text-saffron-800'
+                            }`}
+                          >
+                            {isWater ? <Droplet className="w-5 h-5 fill-current" /> : <Flame className="w-5 h-5" />}
                           </div>
-                          <p className="text-xs sm:text-sm font-semibold text-gray-800 mt-0.5 line-clamp-1">
-                            {comp.title}
-                          </p>
-                          <p className="text-[11px] text-gray-500">
-                            {comp.location.area}, {comp.location.district}
-                          </p>
+
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-extrabold text-sm text-gray-900 group-hover:text-maroon-900">
+                                {comp.id}
+                              </span>
+                              <StatusBadge status={comp.status} size="sm" />
+                            </div>
+                            <p className="text-xs sm:text-sm font-semibold text-gray-800 mt-0.5 line-clamp-1">
+                              {comp.title}
+                            </p>
+                            <p className="text-[11px] text-gray-500">
+                              {comp.location.area}, {comp.location.district}
+                            </p>
+                          </div>
+                        </div>
+
+                        <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-maroon-800 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                      </div>
+
+                      {/* Meta Chips: Department, Category, Urgency, Language */}
+                      <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px]">
+                        {/* Department Chip */}
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+                          <Briefcase className="w-3 h-3" />
+                          <span>{comp.department}</span>
+                        </span>
+
+                        {/* Category Chip */}
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 font-semibold border border-cyan-200">
+                          <Droplet className="w-3 h-3" />
+                          <span>{comp.category}</span>
+                        </span>
+
+                        {/* Urgency Chip */}
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 font-semibold border border-amber-200">
+                          <AlertTriangle className="w-3 h-3" />
+                          <span>{comp.urgency}</span>
+                        </span>
+
+                        {/* Language Chip */}
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 font-semibold border border-purple-200">
+                          <Globe className="w-3 h-3" />
+                          <span>{comp.language}</span>
+                        </span>
+
+                        {/* SLA Countdown & Expected Resolution */}
+                        <div className="ml-auto flex items-center gap-2 text-xs">
+                          <span className="text-gray-500 flex items-center gap-1">
+                            <Calendar className="w-3 h-3 text-gray-400" />
+                            <span>{t('expectedResolution')}: <strong>{comp.expectedDate}</strong></span>
+                          </span>
+                          {comp.status !== 'Resolved' && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]">
+                              {comp.daysRemaining} {t('daysLeft')}
+                            </span>
+                          )}
                         </div>
                       </div>
-
-                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-maroon-800 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </div>
-
-                    {/* Meta Chips: Department, Category, Urgency, Language */}
-                    <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px]">
-                      {/* Department Chip */}
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
-                        <Briefcase className="w-3 h-3" />
-                        <span>{comp.department}</span>
-                      </span>
-
-                      {/* Category Chip */}
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 font-semibold border border-cyan-200">
-                        <Droplet className="w-3 h-3" />
-                        <span>{comp.category}</span>
-                      </span>
-
-                      {/* Urgency Chip */}
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 font-semibold border border-amber-200">
-                        <AlertTriangle className="w-3 h-3" />
-                        <span>{comp.urgency}</span>
-                      </span>
-
-                      {/* Language Chip */}
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 font-semibold border border-purple-200">
-                        <Globe className="w-3 h-3" />
-                        <span>{comp.language}</span>
-                      </span>
-
-                      {/* SLA Countdown & Expected Resolution */}
-                      <div className="ml-auto flex items-center gap-2 text-xs">
-                        <span className="text-gray-500 flex items-center gap-1">
-                          <Calendar className="w-3 h-3 text-gray-400" />
-                          <span>{t('expectedResolution')}: <strong>{comp.expectedDate}</strong></span>
-                        </span>
-                        {comp.status !== 'Resolved' && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]">
-                            {comp.daysRemaining} {t('daysLeft')}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
 
           </div>
         </div>
@@ -398,7 +441,12 @@ export const Dashboard: React.FC = () => {
 
             <div className="space-y-3">
               {userUpdates.length === 0 ? (
-                <p className="text-xs text-gray-500 italic">{t('noUpdatesYet')}</p>
+                <div className="py-6 text-center space-y-1.5 border border-dashed border-gray-200 rounded-2xl bg-cream-50/40">
+                  <p className="text-xs font-bold text-gray-700">No updates yet</p>
+                  <p className="text-[11px] text-gray-500">
+                    Official progress notes and status alerts for your grievances will appear here.
+                  </p>
+                </div>
               ) : (
                 userUpdates.map(item => (
                   <div

@@ -64,17 +64,18 @@ def verify_otp(req: VerifyOTPRequest, db: Session = Depends(get_db)):
             detail="Invalid OTP. For demonstration, please use 123456."
         )
 
-    # Find existing citizen user or create new
+    # Find existing citizen user or create new clean user
     user = db.query(User).filter(User.phone == clean_mobile).first()
     if not user:
         user_id = f"USR-{clean_mobile[-4:]}{int(datetime.datetime.utcnow().timestamp()) % 1000}"
         user = User(
             id=user_id,
-            name="Citizen " + clean_mobile[-4:],
+            name="",
             phone=clean_mobile,
             role="citizen",
-            language="or",
-            district="Ganjam"
+            language="en",
+            district=None,
+            state=None
         )
         db.add(user)
         db.commit()
@@ -156,12 +157,8 @@ def guest_login(db: Session = Depends(get_db)):
     )
 
 @router.get("/me", response_model=UserResponse)
-def get_me(current_user: Optional[User] = Depends(get_current_user), db: Session = Depends(get_db)):
+def get_me(current_user: Optional[User] = Depends(get_current_user)):
     if not current_user:
-        # Return default demo user Rani Nayak if unauthenticated for smooth frontend development
-        demo = db.query(User).filter(User.id == "USR-8921").first()
-        if demo:
-            return UserResponse.from_orm(demo)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     return UserResponse.from_orm(current_user)
 
@@ -171,21 +168,22 @@ def update_profile(
     current_user: Optional[User] = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    target = current_user or db.query(User).filter(User.id == "USR-8921").first()
-    if not target:
-        raise HTTPException(status_code=404, detail="User not found")
+    if not current_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
-    target.name = updates.name
+    if updates.name is not None:
+        current_user.name = updates.name
     if updates.phone:
-        target.phone = updates.phone
-    if updates.email:
-        target.email = updates.email
-    if updates.district:
-        target.district = updates.district
+        current_user.phone = updates.phone
+    if updates.email is not None:
+        current_user.email = updates.email
+    if updates.district is not None:
+        current_user.district = updates.district
+    if updates.state is not None:
+        current_user.state = updates.state
     if updates.language:
-        target.language = updates.language
+        current_user.language = updates.language
 
     db.commit()
-    db.refresh(target)
-    return UserResponse.from_orm(target)
-
+    db.refresh(current_user)
+    return UserResponse.from_orm(current_user)

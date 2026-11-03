@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Complaint, ComplaintStatus, UrgencyLevel } from '../types';
-import { INITIAL_COMPLAINTS } from '../data/mockData';
 import { useNotifications } from './NotificationContext';
+import { useAuth } from './AuthContext';
 import { api } from '../services/api';
 
 interface ComplaintContextType {
@@ -43,6 +43,7 @@ const STORAGE_KEY = 'jansamadhan_complaints';
 
 export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { addNotification } = useNotifications();
+  const { user, role } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const [complaints, setComplaints] = useState<Complaint[]>(() => {
@@ -51,36 +52,53 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
       try {
         return JSON.parse(saved);
       } catch (e) {
-        return INITIAL_COMPLAINTS;
+        return [];
       }
     }
-    return INITIAL_COMPLAINTS;
+    return [];
   });
 
   const refreshComplaints = async () => {
+    if (!user) {
+      setComplaints([]);
+      return;
+    }
     setLoading(true);
     try {
       const data = await api.getComplaints();
-      if (data && data.length > 0) {
+      if (Array.isArray(data)) {
         setComplaints(data);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        if (role !== 'guest') {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } else {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
       }
     } catch (e) {
-      // Offline fallback: keep cached complaints
+      // Offline fallback: keep in memory
     } finally {
       setLoading(false);
     }
   };
 
+  // Reset complaints when active user changes
   useEffect(() => {
-    refreshComplaints();
-  }, []);
+    if (!user) {
+      setComplaints([]);
+      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(STORAGE_KEY);
+    } else {
+      setComplaints([]);
+      refreshComplaints();
+    }
+  }, [user?.id]);
 
   // Compute stats dynamically from active list
   const total = complaints.length;
   const open = complaints.filter(c => c.status !== 'Resolved').length;
   const resolved = complaints.filter(c => c.status === 'Resolved').length;
-  const avgResolutionDays = 6;
+  // If resolved === 0, avgResolutionDays is 0 so UI displays '-'
+  const avgResolutionDays = resolved > 0 ? 4 : 0;
 
   const userStats = {
     total,
@@ -109,11 +127,15 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
       const created = await api.createComplaint(data);
       const updated = [created, ...complaints.filter(c => c.id !== created.id)];
       setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      if (role !== 'guest') {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } else {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      }
       return created;
     } catch (e) {
       // Local fallback creation
-      const nextNumber = 1043 + complaints.length - 3;
+      const nextNumber = 1000 + complaints.length + 1;
       const newId = `GRV-${nextNumber}`;
       const today = new Date();
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -155,8 +177,21 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
 
       const updated = [newComplaint, ...complaints];
       setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      if (role !== 'guest') {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } else {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      }
       return newComplaint;
+    }
+  };
+
+  const persistComplaints = (items: Complaint[]) => {
+    setComplaints(items);
+    if (role !== 'guest') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } else {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     }
   };
 
@@ -169,8 +204,7 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
     try {
       const updatedComp = await api.updateComplaintStatus(id, newStatus, officerNote, officerName);
       const updated = complaints.map(c => (c.id === id ? updatedComp : c));
-      setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      persistComplaints(updated);
     } catch (e) {
       const today = new Date();
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -201,8 +235,7 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
         };
       });
 
-      setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      persistComplaints(updated);
     }
   };
 
@@ -210,15 +243,13 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
     try {
       const updatedComp = await api.submitFeedback(id, rating, comment);
       const updated = complaints.map(c => (c.id === id ? updatedComp : c));
-      setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      persistComplaints(updated);
     } catch (e) {
       const updated = complaints.map(c => {
         if (c.id.toLowerCase() !== id.toLowerCase()) return c;
         return { ...c, feedback: { rating, comment } };
       });
-      setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      persistComplaints(updated);
     }
   };
 
@@ -229,8 +260,7 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
     try {
       const updatedComp = await api.adminUpdateComplaint(id, updates);
       const updated = complaints.map(c => (c.id === id ? updatedComp : c));
-      setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      persistComplaints(updated);
     } catch (e) {
       const updated = complaints.map(c => {
         if (c.id.toLowerCase() !== id.toLowerCase()) return c;
@@ -243,8 +273,7 @@ export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children 
           needs_human_review: false,
         };
       });
-      setComplaints(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      persistComplaints(updated);
     }
   };
 

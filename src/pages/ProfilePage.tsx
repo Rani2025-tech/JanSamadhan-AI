@@ -23,15 +23,27 @@ export const ProfilePage: React.FC = () => {
   const { currentLanguage, setLanguage, t } = useLanguage();
   const { fontSize, setFontSize, highContrast, toggleHighContrast } = useAccessibility();
 
-  const [name, setName] = useState(user?.name || 'Rani Nayak');
-  const [phone, setPhone] = useState(user?.phone || '9876543210');
-  const [email, setEmail] = useState(user?.email || 'rani.nayak@example.gov.in');
+  const [name, setName] = useState(user?.name || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [email, setEmail] = useState(user?.email || '');
   
   const initialUserState = user?.state && INDIA_STATES[user.state] ? user.state : 'Odisha';
   const [state, setState] = useState(initialUserState);
   const availableDistricts = INDIA_STATES[state]?.districts || ['Ganjam'];
-  const [district, setDistrict] = useState(user?.district || availableDistricts[0] || 'Ganjam');
+  const [district, setDistrict] = useState(user?.district || availableDistricts[0] || '');
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  React.useEffect(() => {
+    setName(user?.name || '');
+    setPhone(user?.phone || '');
+    setEmail(user?.email || '');
+    if (user?.state && INDIA_STATES[user.state]) {
+      setState(user.state);
+    }
+    if (user?.district) {
+      setDistrict(user.district);
+    }
+  }, [user]);
 
   const handleStateChange = (newState: string) => {
     setState(newState);
@@ -52,6 +64,37 @@ export const ProfilePage: React.FC = () => {
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
+  const formatMaskedPhone = (num?: string) => {
+    if (!num) return '';
+    const clean = num.replace(/\D/g, '');
+    if (clean.length === 10) {
+      return `+91 ${clean.slice(0, 2)}xxxxx${clean.slice(-3)}`;
+    }
+    return num;
+  };
+
+  const displayName = name.trim()
+    ? name.trim()
+    : phone
+    ? formatMaskedPhone(phone)
+    : role === 'guest'
+    ? 'Guest Citizen'
+    : 'Citizen';
+
+  const userInitials = (() => {
+    if (name.trim()) {
+      const parts = name.trim().split(/\s+/);
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    if (phone) {
+      const clean = phone.replace(/\D/g, '');
+      return clean.slice(0, 2) || 'U';
+    }
+    if (role === 'guest') return 'GC';
+    return 'U';
+  })();
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300 pb-16">
       {/* Header */}
@@ -69,23 +112,20 @@ export const ProfilePage: React.FC = () => {
         {/* Left: User Card & Role */}
         <div className="md:col-span-4 bg-white rounded-3xl p-6 border border-maroon-100 shadow-soft text-center space-y-4">
           <div className="relative inline-block">
-            {user?.avatar ? (
-              <img
-                src={user.avatar}
-                alt={name}
-                className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-cream-300 shadow-md"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full mx-auto bg-maroon-800 text-white flex items-center justify-center text-3xl font-bold border-4 border-cream-300 shadow-md">
-                {name.charAt(0)}
-              </div>
-            )}
+            <div className="w-24 h-24 rounded-full mx-auto bg-maroon-800 text-white flex items-center justify-center text-3xl font-bold border-4 border-cream-300 shadow-md">
+              {userInitials}
+            </div>
             <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full" />
           </div>
 
           <div>
-            <h2 className="text-lg font-extrabold text-gray-900">{name}</h2>
-            <p className="text-xs text-gray-500">{phone || 'Guest Mode'}</p>
+            <h2 className="text-lg font-extrabold text-gray-900">{displayName}</h2>
+            <p className="text-xs text-gray-500">{phone ? `+91 ${phone}` : 'Guest Session'}</p>
+            {!name.trim() && role === 'citizen' && (
+              <p className="text-[11px] text-amber-700 font-semibold mt-1 bg-amber-50 rounded-lg py-1 px-2 border border-amber-200">
+                Please enter your full name below
+              </p>
+            )}
           </div>
 
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maroon-100 text-maroon-900 text-xs font-bold uppercase tracking-wider">
@@ -94,8 +134,8 @@ export const ProfilePage: React.FC = () => {
           </div>
 
           <div className="pt-4 border-t border-gray-100 text-left text-xs space-y-2 text-gray-600">
-            <p><strong>Registered ID:</strong> {user?.id || 'USR-8921'}</p>
-            <p><strong>District:</strong> {district}</p>
+            <p><strong>Registered ID:</strong> {user?.id || '—'}</p>
+            <p><strong>District:</strong> {district || 'Not Set'}</p>
             <p><strong>State:</strong> {state}, India</p>
           </div>
         </div>

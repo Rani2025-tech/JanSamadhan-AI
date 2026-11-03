@@ -17,6 +17,7 @@ from app.schemas import (
     AssignedOfficerSchema,
     StatusHistoryItemSchema
 )
+from app.routes.auth import get_current_user
 from ai import extract, check_duplicate_complaint, translate
 
 router = APIRouter(prefix="/complaints", tags=["Complaints"])
@@ -56,6 +57,7 @@ def format_complaint_response(c: Complaint) -> ComplaintResponse:
         urgency=c.urgency,
         language=c.language,
         status=c.status,
+        state=c.state or "Odisha",
         location={
             "district": c.district,
             "area": c.area,
@@ -86,21 +88,38 @@ def get_complaints(
     status: Optional[str] = Query(None),
     department: Optional[str] = Query(None),
     district: Optional[str] = Query(None),
+    state: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
     limit: int = Query(100),
     offset: int = Query(0),
+    current_user: Optional[User] = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     query = db.query(Complaint)
 
-    if user_id:
-        query = query.filter(Complaint.user_id == user_id)
+    # 1. Enforce Role-Based Scoping
+    if current_user and current_user.role == "admin":
+        # Admin can view all or filter by user_id
+        if user_id:
+            query = query.filter(Complaint.user_id == user_id)
+    elif current_user:
+        # Citizen or Guest can ONLY view their own records
+        ownership_clauses = [Complaint.user_id == current_user.id]
+        if current_user.phone:
+            ownership_clauses.append(Complaint.citizen_phone == current_user.phone)
+        query = query.filter(or_(*ownership_clauses))
+    else:
+        # Unauthenticated users see an empty list
+        return []
+
     if status and status != "All":
         query = query.filter(Complaint.status.ilike(status))
     if department and department != "All":
         query = query.filter(Complaint.department.ilike(f"%{department}%"))
     if district and district != "All":
         query = query.filter(Complaint.district.ilike(f"%{district}%"))
+    if state and state != "All":
+        query = query.filter(Complaint.state.ilike(f"%{state}%"))
     if search:
         search_pattern = f"%{search}%"
         query = query.filter(
@@ -114,15 +133,37 @@ def get_complaints(
             )
         )
 
-    # Order by ID / creation descending
     complaints = query.order_by(desc(Complaint.created_at)).offset(offset).limit(limit).all()
     return [format_complaint_response(c) for c in complaints]
 
 @router.get("/{complaint_id}", response_model=ComplaintResponse)
-def get_complaint(complaint_id: str, db: Session = Depends(get_db)):
+def get_complaint(
+    complaint_id: str,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     comp = db.query(Complaint).filter(Complaint.id.ilike(complaint_id)).first()
     if not comp:
         raise HTTPException(status_code=404, detail=f"Complaint {complaint_id} not found")
+
+    # Access control: admin has full access
+    if current_user and current_user.role == "admin":
+        return format_complaint_response(comp)
+
+    # Citizen must be the owner
+    is_owner = False
+    if current_user:
+        if comp.user_id and comp.user_id == current_user.id:
+            is_owner = True
+        elif current_user.phone and comp.citizen_phone == current_user.phone:
+            is_owner = True
+
+    if not is_owner:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: You do not have permission to view this grievance record."
+        )
+
     return format_complaint_response(comp)
 
 @router.post("/check-duplicate", response_model=DuplicateCheckResponse)
@@ -136,7 +177,11 @@ def check_duplicate(req: DuplicateCheckRequest, db: Session = Depends(get_db)):
     return DuplicateCheckResponse(**result)
 
 @router.post("", response_model=ComplaintResponse)
-def create_complaint(req: ComplaintCreate, db: Session = Depends(get_db)):
+def create_complaint(
+    req: ComplaintCreate,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     # Run AI extraction to enrich metadata
     ai_result = extract(f"{req.title}. {req.description}")
 
@@ -169,6 +214,10 @@ def create_complaint(req: ComplaintCreate, db: Session = Depends(get_db)):
     )
     dup_id = dup_check.get("matched_complaint_id") if dup_check.get("is_duplicate") else None
 
+    # Owner details strictly from current logged in user
+    actual_user_id = current_user.id if current_user else req.user_id
+    actual_phone = (current_user.phone if current_user and current_user.phone else req.citizen_phone)
+
     new_comp = Complaint(
         id=new_id,
         title=req.title,
@@ -179,7 +228,8 @@ def create_complaint(req: ComplaintCreate, db: Session = Depends(get_db)):
         urgency=req.urgency or ai_result.urgency,
         language=req.language or ai_result.language,
         status="Submitted",
-        district=req.district or ai_result.location.get("district", "Ganjam"),
+        state=req.state or ai_result.location.get("state", "Odisha"),
+        district=req.district or ai_result.location.get("district", "Khurda"),
         area=req.area or ai_result.location.get("area", "Central Area"),
         pincode=req.pincode,
         lat=req.lat or 20.2961,
@@ -187,8 +237,8 @@ def create_complaint(req: ComplaintCreate, db: Session = Depends(get_db)):
         submitted_date=sub_date,
         expected_date=exp_date,
         days_remaining=sla_days,
-        user_id="USR-8921",
-        citizen_phone="9876543210",
+        user_id=actual_user_id,
+        citizen_phone=actual_phone,
         assigned_officer_name=f"Duty Desk ({req.department})",
         assigned_officer_designation="Intake Desk Officer",
         assigned_officer_dept=req.department,
@@ -216,18 +266,19 @@ def create_complaint(req: ComplaintCreate, db: Session = Depends(get_db)):
     )
     db.add(history_entry)
 
-    # Notification for citizen
-    notif = Notification(
-        id=f"NOTIF-{int(now.timestamp() * 1000)}",
-        user_id="USR-8921",
-        title=f"Grievance Registered: {new_id}",
-        message=f"Your complaint regarding '{req.title[:45]}...' has been registered with {req.department}.",
-        type="update",
-        read=False,
-        related_grv_id=new_id,
-        timestamp_str=f"{sub_date} • {now.strftime('%I:%M %p')}"
-    )
-    db.add(notif)
+    # Notification for citizen (scoped to their user_id)
+    if actual_user_id and not actual_user_id.startswith("guest_"):
+        notif = Notification(
+            id=f"NOTIF-{int(now.timestamp() * 1000)}",
+            user_id=actual_user_id,
+            title=f"Grievance Registered: {new_id}",
+            message=f"Your complaint regarding '{req.title[:45]}...' has been registered with {req.department}.",
+            type="update",
+            read=False,
+            related_grv_id=new_id,
+            timestamp_str=f"{sub_date} • {now.strftime('%I:%M %p')}"
+        )
+        db.add(notif)
 
     db.commit()
     db.refresh(new_comp)
@@ -278,18 +329,19 @@ def update_complaint_status(
     )
     db.add(new_hist)
 
-    # Notification
-    notif = Notification(
-        id=f"NOTIF-{int(now.timestamp() * 1000)}",
-        user_id=comp.user_id,
-        title=f"Status Update: {comp.id}",
-        message=f"Status updated to '{update_data.status}'. Remark: {translated_note}",
-        type="update",
-        read=False,
-        related_grv_id=comp.id,
-        timestamp_str=f"{date_str} • {time_str}"
-    )
-    db.add(notif)
+    # Scoped Notification for the owner
+    if comp.user_id and not comp.user_id.startswith("guest_"):
+        notif = Notification(
+            id=f"NOTIF-{int(now.timestamp() * 1000)}",
+            user_id=comp.user_id,
+            title=f"Status Update: {comp.id}",
+            message=f"Status updated to '{update_data.status}'. Remark: {translated_note}",
+            type="update",
+            read=False,
+            related_grv_id=comp.id,
+            timestamp_str=f"{date_str} • {time_str}"
+        )
+        db.add(notif)
 
     db.commit()
     db.refresh(comp)
@@ -342,11 +394,17 @@ def admin_update_complaint(
 def submit_complaint_feedback(
     complaint_id: str,
     fb: ComplaintFeedback,
+    current_user: Optional[User] = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     comp = db.query(Complaint).filter(Complaint.id.ilike(complaint_id)).first()
     if not comp:
         raise HTTPException(status_code=404, detail="Complaint not found")
+
+    if current_user and current_user.role != "admin":
+        is_owner = (comp.user_id == current_user.id) or (current_user.phone and comp.citizen_phone == current_user.phone)
+        if not is_owner:
+            raise HTTPException(status_code=403, detail="Forbidden: You cannot submit feedback for this complaint.")
 
     comp.feedback_rating = fb.rating
     comp.feedback_comment = fb.comment
@@ -354,4 +412,3 @@ def submit_complaint_feedback(
     db.commit()
     db.refresh(comp)
     return format_complaint_response(comp)
-

@@ -65,6 +65,40 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
     navigate('/login');
   };
 
+  // Format masked phone (+91 98xxxxx210)
+  const formatMaskedPhone = (phone?: string) => {
+    if (!phone) return '';
+    const clean = phone.replace(/\D/g, '');
+    if (clean.length === 10) {
+      return `+91 ${clean.slice(0, 2)}xxxxx${clean.slice(-3)}`;
+    }
+    return phone;
+  };
+
+  const displayName = user?.name?.trim()
+    ? user.name.trim()
+    : user?.phone
+    ? formatMaskedPhone(user.phone)
+    : role === 'guest'
+    ? 'Guest Citizen'
+    : 'Citizen';
+
+  const userInitials = (() => {
+    if (user?.name?.trim()) {
+      const parts = user.name.trim().split(/\s+/);
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    if (user?.phone) {
+      const clean = user.phone.replace(/\D/g, '');
+      return clean.slice(0, 2) || 'U';
+    }
+    if (role === 'guest') return 'GC';
+    return 'U';
+  })();
+
+  const isProfileIncomplete = role === 'citizen' && (!user?.name?.trim() || !user?.district);
+
   return (
     <header className="sticky top-0 z-30 bg-cream-400/90 backdrop-blur-md border-b border-maroon-100/70 px-4 lg:px-8 py-3 transition-colors">
       <div className="flex items-center justify-between gap-4">
@@ -149,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
             <Bell className="w-5 h-5 text-gray-700" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-red-600 text-white text-[11px] font-bold shadow-sm animate-pulse-subtle">
-                {unreadCount}
+                {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </Link>
@@ -163,19 +197,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
               aria-expanded={userDropdownOpen}
               aria-label="User profile menu"
             >
-              {user?.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  className="w-7 h-7 rounded-full object-cover border border-maroon-200"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-maroon-800 text-white flex items-center justify-center text-xs font-bold">
-                  {user?.name?.charAt(0) || 'U'}
-                </div>
-              )}
+              <div className="w-7 h-7 rounded-full bg-maroon-800 text-white flex items-center justify-center text-xs font-bold">
+                {userInitials}
+              </div>
               <span className="text-sm font-semibold text-gray-800 max-w-[120px] truncate hidden sm:inline-block">
-                {user?.name || 'Citizen'}
+                {displayName}
               </span>
               <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
             </button>
@@ -183,13 +209,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
             {userDropdownOpen && (
               <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white shadow-soft-lg border border-maroon-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                 <div className="px-4 py-2 border-b border-gray-100">
-                  <div className="font-bold text-gray-900 text-sm">{user?.name}</div>
-                  <div className="text-xs text-gray-500 truncate">{user?.phone || user?.email || 'Guest Mode'}</div>
+                  <div className="font-bold text-gray-900 text-sm">{displayName}</div>
+                  <div className="text-xs text-gray-500 truncate">{user?.phone ? `+91 ${user.phone}` : user?.email || 'Guest Mode'}</div>
                   <div className="mt-1.5 flex items-center gap-1.5">
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-maroon-100 text-maroon-800 uppercase tracking-wider">
                       {role === 'admin' ? 'Officer / Admin' : role === 'guest' ? 'Guest Citizen' : 'Citizen'}
                     </span>
                   </div>
+                  {isProfileIncomplete && (
+                    <Link
+                      to="/profile"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="mt-2 block text-center text-xs font-bold text-amber-900 bg-amber-100/90 hover:bg-amber-200 border border-amber-300 rounded-xl py-1 px-2 transition-colors"
+                    >
+                      Complete your profile &rarr;
+                    </Link>
+                  )}
                 </div>
 
                 <div className="py-1">

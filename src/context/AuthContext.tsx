@@ -22,19 +22,19 @@ const USER_KEY = 'jansamadhan_user';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(() => {
-    const savedUser = localStorage.getItem(USER_KEY);
+    const savedUser = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
     if (savedUser) {
       try {
         return JSON.parse(savedUser);
       } catch (e) {
-        return INITIAL_USER;
+        return null;
       }
     }
-    return INITIAL_USER;
+    return null;
   });
 
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem(TOKEN_KEY) || 'mock_jwt_token_citizen_rani_nayak';
+    return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || null;
   });
 
   const role = user ? user.role : null;
@@ -46,22 +46,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       api.getMe()
         .then(u => {
           setUser(u);
-          localStorage.setItem(USER_KEY, JSON.stringify(u));
+          if (u.role === 'guest') {
+            sessionStorage.setItem(USER_KEY, JSON.stringify(u));
+          } else {
+            localStorage.setItem(USER_KEY, JSON.stringify(u));
+          }
         })
         .catch(() => {
-          // If offline, preserve saved state
+          // If offline or 401, handle appropriately
         });
     }
-  }, []);
+  }, [token]);
 
   const saveSession = (newUser: UserProfile, jwtToken: string) => {
+    // Clear any previous user's data before saving new session
+    localStorage.removeItem('jansamadhan_complaints');
+    localStorage.removeItem('jansamadhan_notifications');
+    sessionStorage.removeItem('jansamadhan_complaints');
+    sessionStorage.removeItem('jansamadhan_notifications');
+
     setUser(newUser);
     setToken(jwtToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
-    localStorage.setItem(TOKEN_KEY, jwtToken);
+    if (newUser.role === 'guest') {
+      sessionStorage.setItem(USER_KEY, JSON.stringify(newUser));
+      sessionStorage.setItem(TOKEN_KEY, jwtToken);
+    } else {
+      localStorage.setItem(USER_KEY, JSON.stringify(newUser));
+      localStorage.setItem(TOKEN_KEY, jwtToken);
+    }
   };
 
   const loginCitizen = async (mobile: string, otp: string): Promise<{ success: boolean; error?: string }> => {
+    // Clear state before login
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('jansamadhan_complaints');
+    localStorage.removeItem('jansamadhan_notifications');
+    sessionStorage.clear();
+
     try {
       const res = await api.verifyOtp(mobile, otp);
       saveSession(res.user, res.access_token);
@@ -75,13 +99,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (otp !== '123456') {
         return { success: false, error: 'Invalid OTP. For demonstration, use mock code 123456.' };
       }
-      const citizenUser: UserProfile = { ...INITIAL_USER, phone: cleanMobile };
+      const isRani = cleanMobile === '9876543210';
+      const citizenUser: UserProfile = isRani
+        ? { ...INITIAL_USER, phone: cleanMobile }
+        : {
+            id: `usr_${cleanMobile}`,
+            name: '',
+            phone: cleanMobile,
+            role: 'citizen',
+            district: '',
+            state: 'Odisha',
+            language: 'en',
+          };
       saveSession(citizenUser, `mock_jwt_citizen_${cleanMobile}`);
       return { success: true };
     }
   };
 
   const loginAdmin = async (idOrEmail: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('jansamadhan_complaints');
+    localStorage.removeItem('jansamadhan_notifications');
+    sessionStorage.clear();
+
     try {
       const res = await api.adminLogin(idOrEmail, password);
       saveSession(res.user, res.access_token);
@@ -97,11 +140,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const loginGuest = async () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('jansamadhan_complaints');
+    localStorage.removeItem('jansamadhan_notifications');
+    sessionStorage.clear();
+
     try {
       const res = await api.guestLogin();
-      saveSession(res.user, res.access_token);
+      sessionStorage.setItem(USER_KEY, JSON.stringify(res.user));
+      sessionStorage.setItem(TOKEN_KEY, res.access_token);
+      setUser(res.user);
+      setToken(res.access_token);
     } catch (e) {
-      saveSession(GUEST_USER, `mock_jwt_guest_${Date.now()}`);
+      const guestUser: UserProfile = {
+        id: `GUEST-${Date.now().toString(36)}`,
+        name: 'Guest Citizen',
+        phone: '',
+        role: 'guest',
+        language: 'en',
+      };
+      const guestToken = `mock_jwt_guest_${Date.now()}`;
+      sessionStorage.setItem(USER_KEY, JSON.stringify(guestUser));
+      sessionStorage.setItem(TOKEN_KEY, guestToken);
+      setUser(guestUser);
+      setToken(guestToken);
     }
   };
 
@@ -110,6 +175,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setToken(null);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('jansamadhan_complaints');
+    localStorage.removeItem('jansamadhan_notifications');
+    localStorage.removeItem('jansamadhan_chat_session');
+    sessionStorage.clear();
   };
 
   const updateUserProfile = async (updates: Partial<UserProfile>) => {

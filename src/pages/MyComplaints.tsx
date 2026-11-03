@@ -18,7 +18,7 @@ import { StatusBadge } from '../components/common/StatusBadge';
 import { ComplaintStatus } from '../types';
 
 export const MyComplaints: React.FC = () => {
-  const { complaints } = useComplaints();
+  const { complaints, loading } = useComplaints();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -148,7 +148,40 @@ export const MyComplaints: React.FC = () => {
 
       {/* Complaints List */}
       <div className="space-y-4">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="space-y-4">
+            <div className="bg-white rounded-3xl p-8 border border-maroon-100 animate-pulse h-32" />
+            <div className="bg-white rounded-3xl p-8 border border-maroon-100 animate-pulse h-32" />
+          </div>
+        ) : complaints.length === 0 ? (
+          <div className="bg-white rounded-3xl p-12 text-center border border-maroon-100 shadow-soft space-y-4">
+            <div className="w-14 h-14 rounded-full bg-cream-200 text-maroon-800 flex items-center justify-center mx-auto shadow-xs">
+              <FileDown className="w-7 h-7" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-extrabold text-gray-900">No complaints yet. File your first grievance</h3>
+              <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                You haven't filed any grievances yet. Once submitted, your ticket timeline and status will be tracked here.
+              </p>
+            </div>
+            <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
+              <button
+                type="button"
+                onClick={() => navigate('/assistant')}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-maroon-800 text-white text-xs sm:text-sm font-bold hover:bg-maroon-700 shadow-sm transition-all"
+              >
+                <span>File via AI Assistant</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/file-form')}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-maroon-200 text-maroon-900 text-xs sm:text-sm font-bold hover:bg-cream-100 shadow-xs transition-all"
+              >
+                <span>File via Form</span>
+              </button>
+            </div>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-maroon-100 shadow-soft space-y-3">
             <div className="w-12 h-12 rounded-full bg-cream-200 text-maroon-800 flex items-center justify-center mx-auto">
               <Search className="w-6 h-6" />

@@ -76,7 +76,7 @@ export const Sidebar: React.FC = () => {
             <span className="flex-1">{t('navNotifications')}</span>
             {unreadCount > 0 && (
               <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full bg-red-600 text-white shadow-sm">
-                {unreadCount}
+                {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </NavLink>

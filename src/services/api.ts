@@ -32,7 +32,7 @@ async function fetchWithStatus(url: string, init?: RequestInit): Promise<Respons
 }
 
 function getAuthHeader(): Record<string, string> {
-  const token = localStorage.getItem('jansamadhan_jwt');
+  const token = localStorage.getItem('jansamadhan_jwt') || sessionStorage.getItem('jansamadhan_jwt');
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };

@@ -117,6 +117,26 @@ export const AIAssistantPage: React.FC = () => {
     };
   }, [isSpeechSynthesisSupported]);
 
+  // Reset conversation on user change so new user always starts with a clean slate
+  useEffect(() => {
+    if (isSpeechSynthesisSupported) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeakingIndex(null);
+    setIsPaused(false);
+    setSessionId(`CHAT-${Date.now()}`);
+    setMessages([
+      {
+        sender: 'ai',
+        text: t('chatGreeting'),
+        time: 'Just now',
+        langCode: currentLanguageOption.code,
+      },
+    ]);
+    setTicketDraft(null);
+    setDetectedFaq(null);
+  }, [user?.id]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, ticketDraft]);

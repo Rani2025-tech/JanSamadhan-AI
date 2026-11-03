@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { NotificationItem } from '../types';
-import { INITIAL_NOTIFICATIONS } from '../data/mockData';
 import { api } from '../services/api';
+import { useAuth } from './AuthContext';
 
 interface NotificationContextType {
   notifications: NotificationItem[];
@@ -19,40 +19,62 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 const STORAGE_KEY = 'jansamadhan_notifications';
 
 export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { user, role } = useAuth();
+
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        return INITIAL_NOTIFICATIONS;
+        return [];
       }
     }
-    return INITIAL_NOTIFICATIONS;
+    return [];
   });
 
   const refreshNotifications = async () => {
+    if (!user) {
+      setNotifications([]);
+      return;
+    }
     try {
       const data = await api.getNotifications();
-      if (data && data.length > 0) {
+      if (Array.isArray(data)) {
         setNotifications(data);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        if (role !== 'guest') {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
       }
     } catch (e) {
-      // Offline fallback
+      // Offline fallback: keep in memory
     }
   };
 
+  // Reset notifications on user change
   useEffect(() => {
-    refreshNotifications();
-  }, []);
+    if (!user) {
+      setNotifications([]);
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      setNotifications([]);
+      refreshNotifications();
+    }
+  }, [user?.id]);
 
   const saveNotifications = (items: NotificationItem[]) => {
     setNotifications(items);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    if (user && role !== 'guest') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  // Guests and unauthenticated users always have unreadCount = 0.
+  // Announcements do not increment unread notification badge.
+  const unreadCount = !user || role === 'guest'
+    ? 0
+    : notifications.filter(n => n.type === 'update' && !n.read).length;
+
   const userUpdates = notifications.filter(n => n.type === 'update');
   const announcements = notifications.filter(n => n.type === 'announcement');
 

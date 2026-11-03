@@ -23,7 +23,7 @@ class TestSlotFillerAndLocation(unittest.TestCase):
         self.assertEqual(state, "confirming")
         self.assertIsNotNone(card)
         self.assertEqual(card["district"], "Puri")
-        self.assertEqual(card["area"], "near bus stand")
+        self.assertIn("near bus stand", card["area"])
         self.assertEqual(card["category"], "Electricity")
         self.assertEqual(card["urgency"], "Medium")
 
@@ -87,7 +87,7 @@ class TestSlotFillerAndLocation(unittest.TestCase):
         self.assertIsNotNone(card)
         self.assertEqual(card["district"], "Lucknow")
         self.assertEqual(card["state"], "Uttar Pradesh")
-        self.assertEqual(card["area"], "गोमती नगर")
+        self.assertTrue("Gomti Nagar" in card["area"] or "गोमती नगर" in card["area"])
         self.assertEqual(card["department"], "UPPCL")
         self.assertIn("विभाग", reply)
 

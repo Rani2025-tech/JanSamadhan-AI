@@ -36,7 +36,7 @@ export const Login: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'citizen' | 'admin'>('citizen');
 
   // Citizen OTP Flow State
-  const [mobileNumber, setMobileNumber] = useState('9876543210');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [mobileTouched, setMobileTouched] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -438,16 +438,28 @@ export const Login: React.FC = () => {
                           />
                         </div>
 
-                        {mobileError ? (
-                          <p className="text-xs text-red-600 font-semibold flex items-center gap-1 pt-1">
-                            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span>{mobileError}</span>
-                          </p>
-                        ) : (
-                          <p className="text-xs text-gray-700 font-medium pt-1">
-                            {t('otpSendNote')}
-                          </p>
-                        )}
+                        <div className="flex items-center justify-between text-xs pt-1 flex-wrap gap-1">
+                          {mobileError ? (
+                            <p className="text-red-600 font-semibold flex items-center gap-1">
+                              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{mobileError}</span>
+                            </p>
+                          ) : (
+                            <p className="text-gray-700 font-medium">
+                              {t('otpSendNote')}
+                            </p>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMobileNumber('9876543210');
+                              setMobileError('');
+                            }}
+                            className="text-maroon-800 font-bold hover:underline ml-auto"
+                          >
+                            Demo: Rani Nayak
+                          </button>
+                        </div>
                       </div>
 
                       {/* Send OTP: Full width, solid maroon, paper-plane Send icon, rounded-full, h-12 */}

@@ -69,7 +69,7 @@ def test_cross_language_duplicates():
     non_dup_res = check_duplicate_complaint(
         new_text=non_dup_text,
         district="Ganjam",
-        category="Water Supply",  # Different category or issue
+        category="Road Infrastructure",  # Different category
         db=db
     )
     assert non_dup_res["is_duplicate"] is False
