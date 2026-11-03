@@ -1,0 +1,877 @@
+[
+  {
+    "id": "TEST-01",
+    "text": "ଆମ ୱାର୍ଡ ୭ ରେ ପିଇବା ପାଣି ପାଇପ୍ ଲିକ ହୋଇ ରାସ୍ତାରେ ବୋହୁଛି",
+    "true_language": "Odia",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-02",
+    "text": "ପାଣିରେ କାଦୁଅ ଓ ଦୁର୍ଗନ୍ଧ ବାହାରୁଛି ପିଲାମାନେ ଅସୁସ୍ଥ ହେଉଛନ୍ତି",
+    "true_language": "Odia",
+    "true_category": "Water Supply",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-03",
+    "text": "ବାଦାମବାଡ଼ି ମୁଖ୍ୟ ରାସ୍ତାରେ ବଡ଼ ବଡ଼ ଖାଲଖମା ହୋଇ ଦୁର୍ଘଟଣା ଘଟୁଛି",
+    "true_language": "Odia",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-04",
+    "text": "ଗତକାଲି ରାତିରେ ବିଦ୍ୟୁତ୍ ଟ୍ରାନ୍ସଫର୍ମର ପୋଡ଼ି ଯାଇଛି, ପୁରା ଗାଁ ଅନ୍ଧାରରେ ଅଛି",
+    "true_language": "Odia",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-05",
+    "text": "ନର୍ଦ୍ଦମା ପାଣି ଜମି ରହି ବହୁତ ମଶା ହେଉଛନ୍ତି ଓ ଦୁର୍ଗନ୍ଧ ହେଉଛି",
+    "true_language": "Odia",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-06",
+    "text": "ହସ୍ପିଟାଲରେ ଡାକ୍ତର ଅନୁପସ୍ଥିତ ଏବଂ ଜରୁରୀ ସାପ କାମୁଡ଼ା ଔଷଧ ନାହିଁ",
+    "true_language": "Odia",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-07",
+    "text": "ରାସନ ଡିଲର ପ୍ରତି କାର୍ଡରେ ୩ କିଲୋ ଚାଉଳ କମ୍ ଦେଉଛନ୍ତି",
+    "true_language": "Odia",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-08",
+    "text": "Ward 4 re pani pipe phatiki kadua pani asuchi",
+    "true_language": "Odia",
+    "true_category": "Water Supply",
+    "true_urgency": "High",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-09",
+    "text": "Badambadi rasta re pothole heichi gaadi chali paruni",
+    "true_language": "Odia",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-10",
+    "text": "Transformer re spark maruchi fire danger achhi jaldi aasa",
+    "true_language": "Odia",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-11",
+    "text": "Gali re kachra alia bahut jamichi smell asuchi",
+    "true_language": "Odia",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-12",
+    "text": "DHH re snake bite injection nahi boluchhanti",
+    "true_language": "Odia",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-13",
+    "text": "Ration dealer quota ru chaula cut karuchi",
+    "true_language": "Odia",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-14",
+    "text": "वार्ड नंबर 5 में पीने के पानी की मुख्य पाइपलाइन टूट गई है",
+    "true_language": "Hindi",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-15",
+    "text": "सड़क पर गहरे गड्ढे हैं जिससे रोजाना बाइक सवार गिर रहे हैं",
+    "true_language": "Hindi",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-16",
+    "text": "बिजली का ट्रांसफार्मर जल गया है और तार से चिंगारियां निकल रही हैं",
+    "true_language": "Hindi",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-17",
+    "text": "कॉलोनी में 4 दिनों से कचरा गाड़ी नहीं आई, चारों तरफ गंदगी फैली है",
+    "true_language": "Hindi",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-18",
+    "text": "अस्पताल में ड्यूटी डॉक्टर मौजूद नहीं हैं और एंटी-रेबीज इंजेक्शन खत्म है",
+    "true_language": "Hindi",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-19",
+    "text": "राशन डीलर 35 किलो के बदले केवल 30 किलो अनाज दे रहा है",
+    "true_language": "Hindi",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-20",
+    "text": "Hamari gali me pani ka pipe leak ho raha hai",
+    "true_language": "Hindi",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-21",
+    "text": "Station road par bohot bada pothole hai accident ho gaya",
+    "true_language": "Hindi",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-22",
+    "text": "Bijli ka khamba gir gaya hai live wire raste par hai danger",
+    "true_language": "Hindi",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-23",
+    "text": "Naali ka ganda pani sadak par beh raha hai badboo aa rahi hai",
+    "true_language": "Hindi",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-24",
+    "text": "CHC me emergency doctor absent hai patient serious hai",
+    "true_language": "Hindi",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-25",
+    "text": "Ration dukan band rakhta hai dealer chawal nahi de raha",
+    "true_language": "Hindi",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-26",
+    "text": "পানীয় জলের পাইপ ফেটে নোংরা ঘোলা জল আসছে",
+    "true_language": "Bengali",
+    "true_category": "Water Supply",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-27",
+    "text": "প্রধান রাস্তার মাঝে বড় গর্তের কারণে কাল রাতে দুর্ঘটনা ঘটেছে",
+    "true_language": "Bengali",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-28",
+    "text": "ট্রান্সফরমার বিকল হয়ে গেছে, গোটা এলাকা সম্পূর্ণ অন্ধকারে",
+    "true_language": "Bengali",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-29",
+    "text": "খোলা ড্রেনের নোংরা জল রাস্তায় উপচে পড়ছে, দুর্গন্ধ ছড়াচ্ছে",
+    "true_language": "Bengali",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-30",
+    "text": "হাসপাতালে কোনো সাপে কাটার ওষুধ নেই, রোগীদের রেফার করছে",
+    "true_language": "Bengali",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-31",
+    "text": "রেশন ডিলার মাপে কম চাল দিচ্ছে ও বিল দিচ্ছে না",
+    "true_language": "Bengali",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-32",
+    "text": "Rastar sob streetlight bondho ache raate khub andhokar",
+    "true_language": "Bengali",
+    "true_category": "Electricity",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-33",
+    "text": "Pani pipeline theke ganda jol berocche sobai sick",
+    "true_language": "Bengali",
+    "true_category": "Water Supply",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-34",
+    "text": "Kachra vehicle asche na 5 din dhore rasta nongra",
+    "true_language": "Bengali",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-35",
+    "text": "కాలనీలో నాలుగు రోజులుగా తాగునీటి సరఫరా నిలిచిపోయింది",
+    "true_language": "Telugu",
+    "true_category": "Water Supply",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-36",
+    "text": "రహదారిపై ప్రమాదకర గుంతలు ఉన్నాయి, ప్రమాదాలు జరుగుతున్నాయి",
+    "true_language": "Telugu",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-37",
+    "text": "ట్రాన్స్‌ఫార్మర్ కాలిపోయింది, వీధి మొత్తం చీకటిగా ఉంది",
+    "true_language": "Telugu",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-38",
+    "text": "కాలువలో చెత్త పేరుకుపోయి దుర్వాసన వస్తోంది",
+    "true_language": "Telugu",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-39",
+    "text": "ప్రభుత్వ ఆసుపత్రిలో అత్యవసర మందులు లేవు",
+    "true_language": "Telugu",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-40",
+    "text": "రేషన్ డీలర్ బియ్యం తక్కువగా ఇస్తున్నారు",
+    "true_language": "Telugu",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-41",
+    "text": "Drinking water pipeline broken near municipal market causing flooding",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-42",
+    "text": "Deep potholes on the main highway causing frequent severe accidents",
+    "true_language": "English",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-43",
+    "text": "Burnt electrical transformer causing blackouts for over 48 hours",
+    "true_language": "English",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-44",
+    "text": "Open garbage dump near hospital creating severe infection risk",
+    "true_language": "English",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-45",
+    "text": "Anti-rabies vaccine out of stock at government health center",
+    "true_language": "English",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-46",
+    "text": "Fair price ration shop dealer refusing to disburse monthly food grain",
+    "true_language": "English",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-47",
+    "text": "Streetlights non operational in sector 5 for two weeks",
+    "true_language": "English",
+    "true_category": "Electricity",
+    "true_urgency": "Low",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-48",
+    "text": "Low water pressure in 4th cross road, tanker requested",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "Low",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-49",
+    "text": "Dead animal on the roadside, needs immediate removal",
+    "true_language": "English",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-50",
+    "text": "Biometric machine broken at ration shop cannot take ration",
+    "true_language": "English",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-51",
+    "text": "Overhead 11KV wire sparking against tree branches in heavy wind",
+    "true_language": "English",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-52",
+    "text": "Doctor absent at sub divisional hospital during accident emergency",
+    "true_language": "English",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-53",
+    "text": "Water leakage in school ground tap water muddy",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-54",
+    "text": "Pothole filled with rainwater, cars getting stuck",
+    "true_language": "English",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-55",
+    "text": "Drain choked with plastic bottles causing street overflow",
+    "true_language": "English",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-56",
+    "text": "Aji sakalu pipe phatiki pura pani rasta re",
+    "true_language": "Odia",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-57",
+    "text": "Gali me bijli ka transformer dhuwan fek raha hai",
+    "true_language": "Hindi",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-58",
+    "text": "CHC re ambulance nahi patient death risk",
+    "true_language": "Odia",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-59",
+    "text": "Bridge ka railing tut gaya hai koi bhi gir sakta hai",
+    "true_language": "Hindi",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-60",
+    "text": "Dealer ration card biometric scan re problem heuchi",
+    "true_language": "Odia",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-61",
+    "text": "Drain cleaner gadi asuni gandha hauchhi masha badhuchhanti",
+    "true_language": "Odia",
+    "true_category": "Sanitation",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "train"
+  },
+  {
+    "id": "TEST-62",
+    "text": "Tap water foul smelling yellow color, disease danger",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-63",
+    "text": "11KV line hanging low over road, buses touching it",
+    "true_language": "English",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-64",
+    "text": "Road washed away in flash flood, cut off from town",
+    "true_language": "English",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-65",
+    "text": "Mosquito fogging needed in entire ward dengue outbreak",
+    "true_language": "English",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "train"
+  },
+  {
+    "id": "TEST-66",
+    "text": "ଗ୍ରାମରେ ନଳକୂପ ଅଚଳ ହୋଇଥିବାରୁ ପିଇବା ପାଣି ପାଇଁ ଲୋକେ ବହୁତ ହଇରାଣ ହେଉଛନ୍ତି",
+    "true_language": "Odia",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-67",
+    "text": "आमच्या भागात गेल्या आठ दिवसांपासून दूषित पिण्याचे पाणी येत असून नागरिक आजारी पडत आहेत",
+    "true_language": "Marathi",
+    "true_category": "Water Supply",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-68",
+    "text": "Severe water pipeline burst near railway colony flooding nearby residential houses",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-69",
+    "text": "रिंग रोड पर पुलिया धंस गई है, भारी वाहनों का आवागमन ठप है और दुर्घटना का खतरा है",
+    "true_language": "Hindi",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-70",
+    "text": "আমাদের কলোনির রাস্তায় বৃষ্টির জল জমে বড় বড় গর্ত তৈরি হয়েছে গাড়ি চলাচল বন্ধ",
+    "true_language": "Bengali",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-71",
+    "text": "பிரதான சாலையில் உள்ள பாலத்தில் விரிசல் ஏற்பட்டுள்ளது உடனடியாக பழுதுபார்க்க வேண்டும்",
+    "true_language": "Tamil",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-72",
+    "text": "Main highway re bridge slab kholi jaichi accident risk achhi gaadi slow",
+    "true_language": "Odia",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-73",
+    "text": "ବିଦ୍ୟୁତ୍ ତାର ଛିଣ୍ଡି ରାସ୍ତାରେ ପଡ଼ିଛି କରେଣ୍ଟ ଲାଗିବା ଭୟ ଅଛି ତୁରନ୍ତ ଲାଇନ୍ କାଟନ୍ତୁ",
+    "true_language": "Odia",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-74",
+    "text": "कालोनी की सभी स्ट्रीट लाइट पिछले एक महीने से बंद पड़ी हैं रात में अंधेरा रहता है",
+    "true_language": "Hindi",
+    "true_category": "Electricity",
+    "true_urgency": "Low",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-75",
+    "text": "రాత్రి వేళల్లో విద్యుత్ సరఫరా మాటిమాటికీ నిలిచిపోతోంది చదువుకోవడానికి ఇబ్బందిగా ఉంది",
+    "true_language": "Telugu",
+    "true_category": "Electricity",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-76",
+    "text": "Transformer theke dhuya berocche fire brigade dako blast hote pare",
+    "true_language": "Bengali",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-77",
+    "text": "सब्जी मंडी के पास कचरे का भारी ढेर लगा है, बदबू से सांस लेना मुश्किल है",
+    "true_language": "Hindi",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-78",
+    "text": "ନାଳ ସଫା ନହେବାରୁ କାଦୁଅ ପାଣି ଲୋକଙ୍କ ଘର ଭିତରେ ପଶୁଛି ମଶା ବହୁତ ବଢ଼ିଗଲେଣି",
+    "true_language": "Odia",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-79",
+    "text": "Biomedical waste and hospital syringes dumped openly behind community hall without disposal",
+    "true_language": "English",
+    "true_category": "Sanitation",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-80",
+    "text": "प्राथमिक स्वास्थ्य केंद्र पर डॉक्टर नहीं हैं, प्रसव पीड़ा से महिला तड़प रही है एम्बुलेंस चाहिए",
+    "true_language": "Hindi",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-81",
+    "text": "ప్రభుత్వ డిస్పెన్సరీలో విషజ్వరాల మందులు అందుబాటులో లేవు రోగులు తీవ్ర ఇబ్బందులు పడుతున్నారు",
+    "true_language": "Telugu",
+    "true_category": "Public Health",
+    "true_urgency": "High",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-82",
+    "text": "Sub divisional hospital re oxygen cylinder shortage heichi patient ICU re achhi",
+    "true_language": "Odia",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": true,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-83",
+    "text": "Lack of emergency antivenom at primary health care unit after snake bite incident",
+    "true_language": "English",
+    "true_category": "Public Health",
+    "true_urgency": "Critical",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-84",
+    "text": "ରାସନ ଦୋକାନୀ ଗ୍ରାହକଙ୍କୁ ନିମ୍ନମାନର ପୋକ ଲାଗିଥିବା ଗହମ ଦେଉଛନ୍ତି ଏବଂ ରସିଦ ଦେଉନାହାନ୍ତି",
+    "true_language": "Odia",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-85",
+    "text": "Ration shopkeeper card holder ko ration nahi de raha biometric machine kharab bolkar",
+    "true_language": "Hindi",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Medium",
+    "is_code_mixed": true,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-86",
+    "text": "Water supply has been cut off near Dadar station Mumbai",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "Low",
+    "true_district": "Mumbai City",
+    "true_state": "Maharashtra",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-87",
+    "text": "Live electric wire sparking dangerously near Lajpat Nagar metro station Delhi",
+    "true_language": "English",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "true_district": "New Delhi",
+    "true_state": "Delhi",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-88",
+    "text": "Drinking water pipeline leak and water waste in Indiranagar Bengaluru",
+    "true_language": "English",
+    "true_category": "Water Supply",
+    "true_urgency": "Medium",
+    "true_district": "Bengaluru Urban",
+    "true_state": "Karnataka",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-89",
+    "text": "Deep pothole and broken road near T Nagar bus stand Chennai causing accident danger",
+    "true_language": "English",
+    "true_category": "Road Infrastructure",
+    "true_urgency": "High",
+    "true_district": "Chennai",
+    "true_state": "Tamil Nadu",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-90",
+    "text": "Garbage overflow and terrible smell near Shyambazar Kolkata not cleaned",
+    "true_language": "English",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "true_district": "Kolkata",
+    "true_state": "West Bengal",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-91",
+    "text": "Streetlights non operational in Banjara Hills Road No 12 Hyderabad for two weeks",
+    "true_language": "English",
+    "true_category": "Electricity",
+    "true_urgency": "Medium",
+    "true_district": "Hyderabad",
+    "true_state": "Telangana",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-92",
+    "text": "गोमती नगर लखनऊ में नलों में दूषित पानी आ रहा है",
+    "true_language": "Hindi",
+    "true_category": "Water Supply",
+    "true_urgency": "High",
+    "true_district": "Lucknow",
+    "true_state": "Uttar Pradesh",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-93",
+    "text": "Ration dealer charging extra money and refusing wheat quota in Mansarovar Jaipur",
+    "true_language": "English",
+    "true_category": "Ration / PDS",
+    "true_urgency": "Low",
+    "true_district": "Jaipur",
+    "true_state": "Rajasthan",
+    "is_code_mixed": false,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-94",
+    "text": "Ward 12 Kothrud Pune re transformer blast zala aani light geli",
+    "true_language": "Marathi",
+    "true_category": "Electricity",
+    "true_urgency": "Critical",
+    "true_district": "Pune",
+    "true_state": "Maharashtra",
+    "is_code_mixed": true,
+    "split": "held_out"
+  },
+  {
+    "id": "TEST-95",
+    "text": "कंकड़बाग पटना में सड़क पर कचरा और गंदगी फैली हुई है सफाई नहीं हो रही",
+    "true_language": "Hindi",
+    "true_category": "Sanitation",
+    "true_urgency": "High",
+    "true_district": "Patna",
+    "true_state": "Bihar",
+    "is_code_mixed": false,
+    "split": "held_out"
+  }
+]
