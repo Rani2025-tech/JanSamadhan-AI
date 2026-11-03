@@ -4,7 +4,9 @@ import { subscribeToApiStatus, api } from '../../services/api';
 
 export const OfflineBanner: React.FC = () => {
   const [isOffline, setIsOffline] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState<boolean>(() => {
+    return sessionStorage.getItem('offline_banner_dismissed') === 'true';
+  });
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
@@ -14,6 +16,7 @@ export const OfflineBanner: React.FC = () => {
       setIsOffline(offline);
       if (!offline) {
         setDismissed(false);
+        sessionStorage.removeItem('offline_banner_dismissed');
       }
     });
     return unsub;
@@ -23,6 +26,11 @@ export const OfflineBanner: React.FC = () => {
     setChecking(true);
     await api.checkHealth();
     setChecking(false);
+  };
+
+  const handleDismiss = () => {
+    setDismissed(true);
+    sessionStorage.setItem('offline_banner_dismissed', 'true');
   };
 
   if (!isOffline || dismissed) return null;
@@ -47,8 +55,8 @@ export const OfflineBanner: React.FC = () => {
         </button>
         <button
           type="button"
-          onClick={() => setDismissed(true)}
-          className="p-1 rounded-full hover:bg-white/20 text-white/80 hover:text-white transition-colors"
+          onClick={handleDismiss}
+          className="p-1 rounded-full hover:bg-white/20 text-white/80 hover:text-white transition-colors cursor-pointer"
           title="Dismiss offline banner"
         >
           <X className="w-4 h-4" />
@@ -57,4 +65,3 @@ export const OfflineBanner: React.FC = () => {
     </div>
   );
 };
-
