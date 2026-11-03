@@ -53,7 +53,23 @@ def health_check():
         "gemini_active": bool(settings.GEMINI_API_KEY)
     }
 
+# Mount static assets and SPA fallback if dist directory is present
+dist_dir = Path(__file__).resolve().parent.parent / "dist"
+if (dist_dir / "index.html").exists():
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
+
+    assets_dir = dist_dir / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        file_path = dist_dir / full_path
+        if full_path and file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(dist_dir / "index.html")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-

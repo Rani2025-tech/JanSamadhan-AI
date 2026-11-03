@@ -1,6 +1,6 @@
 import { Complaint, NotificationItem, UserProfile, ComplaintStatus, UrgencyLevel, HotspotRecord } from '../types';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || '/api';
 
 let isApiOffline = false;
 let offlineListeners: ((offline: boolean) => void)[] = [];
