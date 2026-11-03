@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-scale: 16px;
+    --primary-maroon: #7A0F2E;
+    --primary-saffron: #F28C28;
+    --primary-cream: #FFF6EE;
+  }
+
+  html {
+    font-size: var(--font-scale);
+    font-family: 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Oriya', 'Noto Sans Bengali', 'Noto Sans Tamil', 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+  }
+
+  html.font-size-small {
+    --font-scale: 14px;
+  }
+
+  html.font-size-normal {
+    --font-scale: 16px;
+  }
+
+  html.font-size-large {
+    --font-scale: 18px;
+  }
+
+  /* High contrast mode */
+  html.high-contrast {
+    filter: contrast(125%);
+  }
+
+  html.high-contrast body {
+    background-color: #0b0c10 !important;
+    color: #ffffff !important;
+  }
+
+  html.high-contrast .bg-cream-400,
+  html.high-contrast .bg-cream-300,
+  html.high-contrast .bg-cream-200,
+  html.high-contrast .bg-cream-100 {
+    background-color: #12141d !important;
+  }
+
+  html.high-contrast .bg-white {
+    background-color: #1a1e2d !important;
+    color: #ffffff !important;
+    border-color: #ffcc00 !important;
+  }
+
+  html.high-contrast .text-gray-900,
+  html.high-contrast .text-gray-800,
+  html.high-contrast .text-gray-700 {
+    color: #ffffff !important;
+  }
+
+  html.high-contrast .text-gray-600,
+  html.high-contrast .text-gray-500 {
+    color: #e2e8f0 !important;
+  }
+
+  html.high-contrast input,
+  html.high-contrast select,
+  html.high-contrast textarea {
+    background-color: #0d1117 !important;
+    color: #ffffff !important;
+    border-color: #f28c28 !important;
+  }
+
+  /* High contrast mode for Leaflet Maps */
+  html.high-contrast .leaflet-container {
+    background: #0f172a !important;
+  }
+  html.high-contrast .leaflet-tile-pane {
+    filter: brightness(0.9) contrast(1.25);
+  }
+  html.high-contrast .leaflet-popup-content-wrapper,
+  html.high-contrast .leaflet-popup-tip {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border: 2px solid #f28c28 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+  }
+  html.high-contrast .leaflet-popup-content h3,
+  html.high-contrast .leaflet-popup-content span,
+  html.high-contrast .leaflet-popup-content strong {
+    color: #ffffff !important;
+  }
+  html.high-contrast .leaflet-popup-close-button {
+    color: #f28c28 !important;
+  }
+}
+
+/* Custom interactive ring */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:ring-offset-2 transition-all duration-150;
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(245, 230, 216, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4919E;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7A0F2E;
+}
+
+/* Pulse animation for urgency */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s infinite ease-in-out;
+}
+
