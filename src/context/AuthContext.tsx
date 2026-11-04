@@ -150,10 +150,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     try {
       const res = await api.guestLogin();
-      sessionStorage.setItem(USER_KEY, JSON.stringify(res.user));
-      sessionStorage.setItem(TOKEN_KEY, res.access_token);
-      setUser(res.user);
-      setToken(res.access_token);
+      saveSession(res.user, res.access_token);
     } catch (e) {
       const guestUser: UserProfile = {
         id: `GUEST-${Date.now().toString(36)}`,
@@ -163,10 +160,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         language: 'en',
       };
       const guestToken = `mock_jwt_guest_${Date.now()}`;
-      sessionStorage.setItem(USER_KEY, JSON.stringify(guestUser));
-      sessionStorage.setItem(TOKEN_KEY, guestToken);
-      setUser(guestUser);
-      setToken(guestToken);
+      saveSession(guestUser, guestToken);
     }
   };
 

@@ -166,9 +166,19 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleGuestLogin = () => {
-    loginGuest();
-    navigate('/dashboard');
+  const [guestLoading, setGuestLoading] = useState(false);
+
+  const handleGuestLogin = async () => {
+    setGuestLoading(true);
+    setMobileError('');
+    try {
+      await loginGuest();
+      navigate('/dashboard');
+    } catch (err: any) {
+      setMobileError('Failed to initialize guest session. Please try again.');
+    } finally {
+      setGuestLoading(false);
+    }
   };
 
   return (
@@ -492,10 +502,17 @@ export const Login: React.FC = () => {
                       <button
                         type="button"
                         onClick={handleGuestLogin}
-                        className="w-full h-11 flex items-center justify-center gap-2 rounded-2xl border border-gray-200 hover:border-maroon-800 text-gray-700 hover:text-maroon-800 font-bold text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800"
+                        disabled={loading || guestLoading}
+                        className="w-full h-11 flex items-center justify-center gap-2 rounded-2xl border border-gray-200 hover:border-maroon-800 text-gray-700 hover:text-maroon-800 font-bold text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 disabled:opacity-60 disabled:cursor-not-allowed"
                       >
-                        <UserPlus className="w-4 h-4 text-maroon-800" />
-                        <span>{t('continueAsGuest')}</span>
+                        {guestLoading ? (
+                          <span className="inline-block w-4 h-4 border-2 border-maroon-800 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            <UserPlus className="w-4 h-4 text-maroon-800" />
+                            <span>{t('continueAsGuest')}</span>
+                          </>
+                        )}
                       </button>
 
                       {/* Info Note in Pale Pink Rounded Box with (i) Icon */}
@@ -620,6 +637,7 @@ export const Login: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
                         className="text-gray-400 hover:text-gray-600 ml-2 focus-visible:outline-none"
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

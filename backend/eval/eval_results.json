@@ -22,7 +22,7 @@
         "location_accuracy": 100.0,
         "location_correct": 10,
         "location_total": 10,
-        "average_latency_ms": 28.75,
+        "average_latency_ms": 20.58,
         "per_category": {
           "Water Supply": {
             "n": 19,
@@ -257,7 +257,7 @@
         "location_accuracy": 100.0,
         "location_correct": 0,
         "location_total": 0,
-        "average_latency_ms": 32.88,
+        "average_latency_ms": 20.53,
         "per_category": {
           "Water Supply": {
             "n": 13,
@@ -492,7 +492,7 @@
         "location_accuracy": 100.0,
         "location_correct": 10,
         "location_total": 10,
-        "average_latency_ms": 23.76,
+        "average_latency_ms": 15.42,
         "per_category": {
           "Water Supply": {
             "n": 6,
@@ -1454,5 +1454,5 @@
       "predicted": "Critical"
     }
   ],
-  "evaluation_timestamp": "2026-11-03 19:33:38"
+  "evaluation_timestamp": "2026-11-04 16:49:30"
 }
