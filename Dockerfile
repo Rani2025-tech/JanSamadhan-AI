@@ -21,9 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 COPY --from=frontend-builder /app/dist ./dist
 
-# Seed initial database
-RUN python backend/seed.py
-
 EXPOSE 8000
 
 # Start unified FastAPI server

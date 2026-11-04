@@ -34,6 +34,18 @@ def setup_test_users():
             )
             db.add(user_b)
 
+        # Ensure User State Tester exists
+        user_tester = db.query(User).filter(User.id == "USR-STATE-TESTER").first()
+        if not user_tester:
+            user_tester = User(
+                id="USR-STATE-TESTER",
+                name="State Tester",
+                phone="9111222333",
+                role="citizen",
+                language="en"
+            )
+            db.add(user_tester)
+
         # Ensure a clean test complaint exists
         test_comp = db.query(Complaint).filter(Complaint.id == "GRV-STATE-TEST").first()
         if not test_comp:
