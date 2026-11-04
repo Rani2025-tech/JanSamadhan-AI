@@ -1,15 +1,23 @@
-import { Complaint, NotificationItem, UserProfile, ComplaintStatus, UrgencyLevel, HotspotRecord } from '../types';
+import {
+  UserProfile,
+  Complaint,
+  NotificationItem,
+  ChatMessage,
+  HotspotRecord,
+  LanguageCode,
+  UrgencyLevel,
+} from '../types';
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || '/api';
+const API_BASE = '/api';
 
 let isApiOffline = false;
-let offlineListeners: ((offline: boolean) => void)[] = [];
+const offlineListeners: ((offline: boolean) => void)[] = [];
 
-export function subscribeToApiStatus(listener: (offline: boolean) => void) {
+export function subscribeToApiOffline(listener: (offline: boolean) => void) {
   offlineListeners.push(listener);
-  listener(isApiOffline);
   return () => {
-    offlineListeners = offlineListeners.filter(l => l !== listener);
+    const idx = offlineListeners.indexOf(listener);
+    if (idx !== -1) offlineListeners.splice(idx, 1);
   };
 }
 
@@ -64,7 +72,7 @@ export const api = {
     const res = await fetchWithStatus(`${API_BASE}/auth/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobile }),
+      body: JSON.stringify({ phone: mobile }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -77,11 +85,11 @@ export const api = {
     const res = await fetchWithStatus(`${API_BASE}/auth/verify-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobile, otp }),
+      body: JSON.stringify({ phone: mobile, otp }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Failed to verify OTP');
+      throw new Error(err.detail || 'Invalid OTP');
     }
     return res.json();
   },
@@ -134,22 +142,20 @@ export const api = {
 
   // Complaints
   async getComplaints(params?: {
-    userId?: string;
     status?: string;
     department?: string;
-    state?: string;
+    urgency?: string;
     district?: string;
     search?: string;
+    user_id?: string;
   }): Promise<Complaint[]> {
     const query = new URLSearchParams();
-    if (params?.userId) query.set('user_id', params.userId);
-    if (params?.status) query.set('status', params.status);
-    if (params?.department) query.set('department', params.department);
-    if (params?.state) query.set('state', params.state);
-    if (params?.district) query.set('district', params.district);
-    if (params?.search) query.set('search', params.search);
-
-    const res = await fetch(`${API_BASE}/complaints?${query.toString()}`, {
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        if (v && v !== 'all') query.set(k, v);
+      });
+    }
+    const res = await fetchWithStatus(`${API_BASE}/complaints?${query.toString()}`, {
       headers: getAuthHeader(),
     });
     if (!res.ok) {
@@ -158,12 +164,12 @@ export const api = {
     return res.json();
   },
 
-  async getComplaintById(id: string): Promise<Complaint> {
-    const res = await fetch(`${API_BASE}/complaints/${id}`, {
+  async getComplaint(id: string): Promise<Complaint> {
+    const res = await fetchWithStatus(`${API_BASE}/complaints/${id}`, {
       headers: getAuthHeader(),
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch complaint ${id}`);
+      throw new Error('Complaint not found');
     }
     return res.json();
   },
@@ -171,94 +177,110 @@ export const api = {
   async createComplaint(data: {
     title: string;
     description: string;
-    category: string;
-    department: string;
-    urgency: UrgencyLevel;
-    language: string;
-    state?: string;
-    district: string;
-    area: string;
+    category?: string;
+    department?: string;
+    sub_category?: string;
+    urgency?: UrgencyLevel;
+    district?: string;
+    area?: string;
     pincode?: string;
+    lat?: number;
+    lng?: number;
+    language?: string;
   }): Promise<Complaint> {
-    const res = await fetch(`${API_BASE}/complaints`, {
+    const res = await fetchWithStatus(`${API_BASE}/complaints`, {
       method: 'POST',
       headers: getAuthHeader(),
       body: JSON.stringify(data),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Failed to file complaint');
-    }
-    return res.json();
-  },
-
-  async checkDuplicate(data: {
-    text: string;
-    district: string;
-    category: string;
-  }): Promise<{ is_duplicate: boolean; confidence: number; matched_complaint_id?: string; matched_title?: string; message: string }> {
-    const res = await fetch(`${API_BASE}/complaints/check-duplicate`, {
-      method: 'POST',
-      headers: getAuthHeader(),
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      return { is_duplicate: false, confidence: 0, message: '' };
+      throw new Error(err.detail || 'Failed to submit complaint');
     }
     return res.json();
   },
 
   async updateComplaintStatus(
     id: string,
-    status: ComplaintStatus,
-    officerNote: string,
+    status: string,
+    note?: string,
     officerName?: string
   ): Promise<Complaint> {
-    const res = await fetch(`${API_BASE}/complaints/${id}/status`, {
+    const res = await fetchWithStatus(`${API_BASE}/complaints/${id}/status`, {
       method: 'PUT',
       headers: getAuthHeader(),
       body: JSON.stringify({
         status,
-        officer_note: officerNote,
-        officer_name: officerName,
+        note,
+        officer: officerName,
       }),
     });
     if (!res.ok) {
-      throw new Error('Failed to update complaint status');
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to update status');
     }
     return res.json();
   },
 
-  async submitFeedback(id: string, rating: number, comment?: string): Promise<Complaint> {
-    const res = await fetch(`${API_BASE}/complaints/${id}/feedback`, {
-      method: 'POST',
-      headers: getAuthHeader(),
-      body: JSON.stringify({ rating, comment }),
-    });
-    if (!res.ok) {
-      throw new Error('Failed to submit feedback');
-    }
-    return res.json();
-  },
-
-  async adminUpdateComplaint(
+  async updateComplaintAdmin(
     id: string,
-    updates: { category?: string; department?: string; urgency?: string; status?: string }
+    updates: {
+      category?: string;
+      department?: string;
+      urgency?: string;
+      assigned_officer_name?: string;
+      assigned_officer_designation?: string;
+      assigned_officer_dept?: string;
+      assigned_officer_phone?: string;
+    }
   ): Promise<Complaint> {
-    const res = await fetch(`${API_BASE}/complaints/${id}/admin-update`, {
+    const res = await fetchWithStatus(`${API_BASE}/complaints/${id}/admin-update`, {
       method: 'PATCH',
       headers: getAuthHeader(),
       body: JSON.stringify(updates),
     });
     if (!res.ok) {
-      throw new Error('Failed to update complaint');
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to update complaint');
+    }
+    return res.json();
+  },
+
+  async checkDuplicate(data: {
+    description: string;
+    category: string;
+    district: string;
+    area?: string;
+    lat?: number;
+    lng?: number;
+  }): Promise<{ is_duplicate: boolean; duplicate_of?: string; similarity_score?: number; reason?: string }> {
+    const res = await fetchWithStatus(`${API_BASE}/complaints/check-duplicate`, {
+      method: 'POST',
+      headers: getAuthHeader(),
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      return { is_duplicate: false };
+    }
+    return res.json();
+  },
+
+  async submitFeedback(id: string, rating: number, comment?: string): Promise<{ success: boolean; message: string }> {
+    const res = await fetchWithStatus(`${API_BASE}/complaints/${id}/feedback`, {
+      method: 'POST',
+      headers: getAuthHeader(),
+      body: JSON.stringify({ rating, comment }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to submit feedback');
     }
     return res.json();
   },
 
   // Notifications
-  async getNotifications(): Promise<NotificationItem[]> {
-    const res = await fetch(`${API_BASE}/notifications`, {
+  async getNotifications(unreadOnly = false): Promise<NotificationItem[]> {
+    const res = await fetchWithStatus(`${API_BASE}/notifications?unread_only=${unreadOnly}`, {
       headers: getAuthHeader(),
     });
     if (!res.ok) {
@@ -302,6 +324,22 @@ export const api = {
     return res.json();
   },
 
+  async getImpactStates(): Promise<any> {
+    const res = await fetchWithStatus(`${API_BASE}/impact/states`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch impact states');
+    }
+    return res.json();
+  },
+
+  async getImpactStates(): Promise<any> {
+    const res = await fetchWithStatus(`${API_BASE}/impact/states`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch impact states');
+    }
+    return res.json();
+  },
+
   async getHotspots(params?: { view?: 'national' | 'district'; state?: string }): Promise<HotspotRecord[]> {
     const query = new URLSearchParams();
     if (params?.view) query.set('view', params.view);
@@ -324,23 +362,29 @@ export const api = {
   }): Promise<{
     session_id: string;
     reply: string;
+    language: string;
     state: string;
-    slots: Record<string, any>;
-    ready_to_file: boolean;
+    intent: string;
+    category?: string;
+    department?: string;
+    urgency?: string;
+    district?: string;
+    area?: string;
+    pincode?: string;
+    extracted_data?: Record<string, any>;
+    needs_confirmation?: boolean;
     confirmation_card?: any;
-    filed_complaint?: Complaint;
-    detected_faq?: { question: string; answer: string; source: string; similarity: number };
+    filed_complaint?: any;
   }> {
-    const res = await fetch(`${API_BASE}/chat/message`, {
+    const res = await fetchWithStatus(`${API_BASE}/chat/message`, {
       method: 'POST',
       headers: getAuthHeader(),
       body: JSON.stringify(data),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Chat request failed');
+      throw new Error(err.detail || 'Failed to send message');
     }
     return res.json();
   },
 };
-

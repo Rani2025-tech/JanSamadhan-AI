@@ -17,6 +17,7 @@ from app.routes import (
     notifications_router,
     admin_router,
     chat_router,
+    impact_router,
 )
 
 # Ensure database tables exist
@@ -71,6 +72,7 @@ app.include_router(complaints_router, prefix=settings.API_V1_STR)
 app.include_router(notifications_router, prefix=settings.API_V1_STR)
 app.include_router(admin_router, prefix=settings.API_V1_STR)
 app.include_router(chat_router, prefix=settings.API_V1_STR)
+app.include_router(impact_router, prefix=settings.API_V1_STR)
 
 @app.get("/api/health")
 def health_check():
@@ -97,7 +99,3 @@ if (dist_dir / "index.html").exists():
         if full_path and file_path.is_file():
             return FileResponse(file_path)
         return FileResponse(dist_dir / "index.html")
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

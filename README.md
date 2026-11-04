@@ -26,7 +26,7 @@ An AI-powered, multilingual citizen grievance redressal platform built for publi
 
 ---
 
-![JanSamadhan Citizen Dashboard](docs/screenshots/dashboard.png)
+![JanSamadhan Citizen Dashboard](docs/screenshots/dashboard.jpg)
 
 </div>
 
@@ -112,11 +112,11 @@ Every input below has been verified against the test harness (`backend/tests/`):
 | View | Details |
 |:---:|:---:|
 | <img src="docs/screenshots/login.png" alt="Citizen Login Screen" width="100%" /> | **Citizen Login & Accessibility Controls**<br />7-language script selection, OTP entry, guest authentication, and WCAG accessibility toolbar. |
-| <img src="docs/screenshots/dashboard.png" alt="Citizen Dashboard" width="100%" /> | **Citizen Redressal Dashboard**<br />Real-time status metrics, quick filing shortcuts, active SLA timeline stepper, and clean slate state. |
-| <img src="docs/screenshots/odia_chat.png" alt="Odia AI Chat Assistant" width="100%" /> | **Odia Conversational AI Assistant**<br />Native Odia dialogue, structured entity extraction, slot filling, and confirmation preview card. |
+| <img src="docs/screenshots/dashboard.jpg" alt="Citizen Dashboard" width="100%" /> | **Citizen Redressal Dashboard (English)**<br />Real-time status indicators, live Gemini AI status pill, quick filing actions, and clean-slate user isolation. |
+| <img src="docs/screenshots/complaint.jpg" alt="File via Form" width="100%" /> | **Manual Grievance Filing (English UI)**<br />Structured filing interface with automated department assignment (PHED), SLA targets, and district selection. |
 | <img src="docs/screenshots/complaint_detail.png" alt="Grievance Detail View" width="100%" /> | **Complaint Tracking & SLA Stepper**<br />Granular status milestones, assigned nodal officer details, official progress notes, and citizen feedback. |
 | <img src="docs/screenshots/admin.png" alt="Admin Management Registry" width="100%" /> | **Nodal Officer Admin Registry**<br />Centralized complaint registry, status state-machine controls, AI confidence telemetry, and filters. |
-| <img src="docs/screenshots/hotspot_map.png" alt="Civic Hotspot Telemetry Map" width="100%" /> | **Civic Hotspot Telemetry Map**<br />Leaflet/OpenStreetMap geographic clustering across all 30 districts of Odisha with department breakdowns. |
+| <img src="docs/screenshots/hotspot_map.png" alt="Civic Hotspot Telemetry Map" width="100%" /> | **Civic Hotspot Telemetry Map**<br />Leaflet/OpenStreetMap geospatial clustering across Indian states and pilot districts with department breakdowns. |
 
 ---
 
