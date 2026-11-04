@@ -417,7 +417,7 @@ export const AIAssistantPage: React.FC = () => {
               className={`flex items-center gap-2 text-xs font-bold transition-colors ${
                 readAloudAuto ? 'text-maroon-900' : 'text-gray-500'
               }`}
-              title="Toggle automatic speech for AI replies"
+              title="Toggle automatic speech for AI replies" aria-label="Toggle read replies aloud"
             >
               <div
                 className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors ${
@@ -450,7 +450,7 @@ export const AIAssistantPage: React.FC = () => {
                     }
                   }}
                   className="p-1 hover:bg-cream-100 rounded text-maroon-800"
-                  title={isPaused ? 'Resume speech' : 'Pause speech'}
+                  title={isPaused ? 'Resume speech' : 'Pause speech'} aria-label={isPaused ? 'Resume speech' : 'Pause speech'}
                 >
                   {isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
                 </button>
@@ -458,7 +458,7 @@ export const AIAssistantPage: React.FC = () => {
                   type="button"
                   onClick={stopSpeaking}
                   className="p-1 hover:bg-cream-100 rounded text-red-600"
-                  title="Stop speech"
+                  title="Stop speech" aria-label="Stop speech"
                 >
                   <Square className="w-3.5 h-3.5" />
                 </button>
@@ -553,7 +553,7 @@ export const AIAssistantPage: React.FC = () => {
                                 ? 'bg-saffron-100 text-saffron-900 ring-2 ring-saffron-400'
                                 : 'text-gray-500 hover:text-maroon-900 hover:bg-cream-100'
                             }`}
-                            title={isCurrentlySpeaking ? (isPaused ? 'Resume speaking' : 'Pause speaking') : 'Read reply aloud'}
+                            title={isCurrentlySpeaking ? (isPaused ? 'Resume speaking' : 'Pause speaking') : 'Read reply aloud'} aria-label="Listen to message"
                           >
                             <Volume2 className={`w-3.5 h-3.5 ${isCurrentlySpeaking && !isPaused ? 'animate-pulse text-maroon-800' : ''}`} />
                             <span className="text-[10px]">
@@ -566,7 +566,7 @@ export const AIAssistantPage: React.FC = () => {
                               type="button"
                               onClick={stopSpeaking}
                               className="p-1 rounded text-red-600 hover:bg-red-50 text-[10px] font-semibold flex items-center"
-                              title="Stop speaking"
+                              title="Stop speaking" aria-label="Stop speaking"
                             >
                               <Square className="w-3 h-3" />
                             </button>
@@ -673,7 +673,7 @@ export const AIAssistantPage: React.FC = () => {
                     ? 'bg-red-500 text-white animate-bounce'
                     : 'bg-cream-300 text-maroon-800 hover:bg-cream-400'
                 }`}
-                title={isListening ? 'Listening...' : `Speak in ${currentLanguageOption.nativeName}`}
+                title={isListening ? 'Listening...' : `Speak in ${currentLanguageOption.nativeName}`} aria-label={isListening ? "Stop voice dictation" : "Start voice dictation"}
               >
                 <Mic className="w-5 h-5" />
               </button>
@@ -690,6 +690,7 @@ export const AIAssistantPage: React.FC = () => {
                 type="submit"
                 disabled={!inputValue.trim()}
                 className="p-3 rounded-full bg-maroon-800 hover:bg-maroon-700 disabled:opacity-40 text-white transition-colors focus-ring"
+                aria-label="Send message"
               >
                 <Send className="w-5 h-5" />
               </button>

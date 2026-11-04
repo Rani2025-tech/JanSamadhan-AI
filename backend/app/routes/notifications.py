@@ -5,7 +5,7 @@ from sqlalchemy import desc, or_
 from app.database import get_db
 from app.models import Notification, User
 from app.schemas import NotificationResponse
-from app.routes.auth import get_current_user
+from app.routes.auth import get_current_user, get_current_user_required
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"])
 
@@ -46,15 +46,20 @@ def get_notifications(
 @router.put("/{notif_id}/read", response_model=NotificationResponse)
 def mark_read(
     notif_id: str,
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db)
 ):
     notif = db.query(Notification).filter(Notification.id == notif_id).first()
     if not notif:
         raise HTTPException(status_code=404, detail="Notification not found")
 
-    if current_user and current_user.role != "admin" and notif.user_id and notif.user_id != current_user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+    # Access control: citizen can only mark their own notifications as read
+    if current_user.role != "admin":
+        if notif.user_id != current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Forbidden: You cannot modify another user's notifications."
+            )
 
     notif.read = True
     db.commit()
@@ -63,7 +68,7 @@ def mark_read(
 
 @router.put("/read-all")
 def mark_all_read(
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db)
 ):
     if current_user and current_user.role == "admin":

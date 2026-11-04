@@ -8,7 +8,13 @@ from app.database import get_db
 from app.models import Complaint, AdminCorrection
 from app.schemas import AdminStatsResponse
 
-router = APIRouter(prefix="/admin", tags=["Admin & Analytics"])
+from app.routes.auth import require_admin
+
+router = APIRouter(
+    prefix="/admin",
+    tags=["Admin & Analytics"],
+    dependencies=[Depends(require_admin)]
+)
 
 @router.get("/stats", response_model=AdminStatsResponse)
 def get_admin_stats(db: Session = Depends(get_db)):

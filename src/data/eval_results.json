@@ -1,0 +1,1458 @@
+{
+  "dataset_summary": {
+    "total_complaints": 95,
+    "train_n": 65,
+    "held_out_n": 30,
+    "code_mixed_n": 26,
+    "human_audit_n": 30
+  },
+  "side_by_side": {
+    "fallback_mode": {
+      "overall": {
+        "n": 95,
+        "language_accuracy": 97.89,
+        "language_correct": 93,
+        "category_accuracy": 93.68,
+        "category_correct": 89,
+        "urgency_accuracy": 35.79,
+        "urgency_correct": 34,
+        "code_mixed_accuracy": 96.15,
+        "code_mixed_correct": 25,
+        "code_mixed_total": 26,
+        "location_accuracy": 100.0,
+        "location_correct": 10,
+        "location_total": 10,
+        "average_latency_ms": 20.58,
+        "per_category": {
+          "Water Supply": {
+            "n": 19,
+            "tp": 17,
+            "fp": 1,
+            "fn": 2,
+            "precision": 94.44,
+            "recall": 89.47,
+            "f1": 91.89
+          },
+          "Road Infrastructure": {
+            "n": 15,
+            "tp": 14,
+            "fp": 3,
+            "fn": 1,
+            "precision": 82.35,
+            "recall": 93.33,
+            "f1": 87.5
+          },
+          "Electricity": {
+            "n": 19,
+            "tp": 18,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 94.74,
+            "f1": 97.3
+          },
+          "Sanitation": {
+            "n": 17,
+            "tp": 15,
+            "fp": 2,
+            "fn": 2,
+            "precision": 88.24,
+            "recall": 88.24,
+            "f1": 88.24
+          },
+          "Public Health": {
+            "n": 13,
+            "tp": 13,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Ration / PDS": {
+            "n": 12,
+            "tp": 12,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_urgency": {
+          "Critical": {
+            "n": 35,
+            "tp": 14,
+            "fp": 3,
+            "fn": 21,
+            "precision": 82.35,
+            "recall": 40.0,
+            "f1": 53.85
+          },
+          "High": {
+            "n": 25,
+            "tp": 10,
+            "fp": 6,
+            "fn": 15,
+            "precision": 62.5,
+            "recall": 40.0,
+            "f1": 48.78
+          },
+          "Medium": {
+            "n": 30,
+            "tp": 7,
+            "fp": 6,
+            "fn": 23,
+            "precision": 53.85,
+            "recall": 23.33,
+            "f1": 32.56
+          },
+          "Low": {
+            "n": 5,
+            "tp": 3,
+            "fp": 46,
+            "fn": 2,
+            "precision": 6.12,
+            "recall": 60.0,
+            "f1": 11.11
+          }
+        },
+        "per_language": {
+          "Odia": {
+            "n": 23,
+            "tp": 23,
+            "fp": 1,
+            "fn": 0,
+            "precision": 95.83,
+            "recall": 100.0,
+            "f1": 97.87
+          },
+          "Hindi": {
+            "n": 21,
+            "tp": 20,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 95.24,
+            "f1": 97.56
+          },
+          "Bengali": {
+            "n": 11,
+            "tp": 11,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Telugu": {
+            "n": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Tamil": {
+            "n": 1,
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Marathi": {
+            "n": 2,
+            "tp": 1,
+            "fp": 1,
+            "fn": 1,
+            "precision": 50.0,
+            "recall": 50.0,
+            "f1": 50.0
+          },
+          "English": {
+            "n": 29,
+            "tp": 29,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Water Supply",
+            "Road Infrastructure",
+            "Electricity",
+            "Sanitation",
+            "Public Health",
+            "Ration / PDS"
+          ],
+          "matrix": [
+            [
+              17,
+              0,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              14,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              18,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              15,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              13,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              12
+            ]
+          ]
+        }
+      },
+      "train": {
+        "n": 65,
+        "language_accuracy": 100.0,
+        "language_correct": 65,
+        "category_accuracy": 90.77,
+        "category_correct": 59,
+        "urgency_accuracy": 26.15,
+        "urgency_correct": 17,
+        "code_mixed_accuracy": 95.24,
+        "code_mixed_correct": 20,
+        "code_mixed_total": 21,
+        "location_accuracy": 100.0,
+        "location_correct": 0,
+        "location_total": 0,
+        "average_latency_ms": 20.53,
+        "per_category": {
+          "Water Supply": {
+            "n": 13,
+            "tp": 11,
+            "fp": 1,
+            "fn": 2,
+            "precision": 91.67,
+            "recall": 84.62,
+            "f1": 88.0
+          },
+          "Road Infrastructure": {
+            "n": 10,
+            "tp": 9,
+            "fp": 3,
+            "fn": 1,
+            "precision": 75.0,
+            "recall": 90.0,
+            "f1": 81.82
+          },
+          "Electricity": {
+            "n": 12,
+            "tp": 11,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 91.67,
+            "f1": 95.65
+          },
+          "Sanitation": {
+            "n": 12,
+            "tp": 10,
+            "fp": 2,
+            "fn": 2,
+            "precision": 83.33,
+            "recall": 83.33,
+            "f1": 83.33
+          },
+          "Public Health": {
+            "n": 9,
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Ration / PDS": {
+            "n": 9,
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_urgency": {
+          "Critical": {
+            "n": 24,
+            "tp": 7,
+            "fp": 3,
+            "fn": 17,
+            "precision": 70.0,
+            "recall": 29.17,
+            "f1": 41.18
+          },
+          "High": {
+            "n": 15,
+            "tp": 5,
+            "fp": 4,
+            "fn": 10,
+            "precision": 55.56,
+            "recall": 33.33,
+            "f1": 41.67
+          },
+          "Medium": {
+            "n": 24,
+            "tp": 4,
+            "fp": 4,
+            "fn": 20,
+            "precision": 50.0,
+            "recall": 16.67,
+            "f1": 25.0
+          },
+          "Low": {
+            "n": 2,
+            "tp": 1,
+            "fp": 37,
+            "fn": 1,
+            "precision": 2.63,
+            "recall": 50.0,
+            "f1": 5.0
+          }
+        },
+        "per_language": {
+          "Odia": {
+            "n": 17,
+            "tp": 17,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Hindi": {
+            "n": 14,
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Bengali": {
+            "n": 9,
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Telugu": {
+            "n": 6,
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Tamil": {
+            "n": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Marathi": {
+            "n": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "English": {
+            "n": 19,
+            "tp": 19,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Water Supply",
+            "Road Infrastructure",
+            "Electricity",
+            "Sanitation",
+            "Public Health",
+            "Ration / PDS"
+          ],
+          "matrix": [
+            [
+              11,
+              0,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              9,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              11,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              10,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              9
+            ]
+          ]
+        }
+      },
+      "held_out": {
+        "n": 30,
+        "language_accuracy": 93.33,
+        "language_correct": 28,
+        "category_accuracy": 100.0,
+        "category_correct": 30,
+        "urgency_accuracy": 56.67,
+        "urgency_correct": 17,
+        "code_mixed_accuracy": 100.0,
+        "code_mixed_correct": 5,
+        "code_mixed_total": 5,
+        "location_accuracy": 100.0,
+        "location_correct": 10,
+        "location_total": 10,
+        "average_latency_ms": 15.42,
+        "per_category": {
+          "Water Supply": {
+            "n": 6,
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Road Infrastructure": {
+            "n": 5,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Electricity": {
+            "n": 7,
+            "tp": 7,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Sanitation": {
+            "n": 5,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Public Health": {
+            "n": 4,
+            "tp": 4,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Ration / PDS": {
+            "n": 3,
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_urgency": {
+          "Critical": {
+            "n": 11,
+            "tp": 7,
+            "fp": 0,
+            "fn": 4,
+            "precision": 100.0,
+            "recall": 63.64,
+            "f1": 77.78
+          },
+          "High": {
+            "n": 10,
+            "tp": 5,
+            "fp": 2,
+            "fn": 5,
+            "precision": 71.43,
+            "recall": 50.0,
+            "f1": 58.82
+          },
+          "Medium": {
+            "n": 6,
+            "tp": 3,
+            "fp": 2,
+            "fn": 3,
+            "precision": 60.0,
+            "recall": 50.0,
+            "f1": 54.55
+          },
+          "Low": {
+            "n": 3,
+            "tp": 2,
+            "fp": 9,
+            "fn": 1,
+            "precision": 18.18,
+            "recall": 66.67,
+            "f1": 28.57
+          }
+        },
+        "per_language": {
+          "Odia": {
+            "n": 6,
+            "tp": 6,
+            "fp": 1,
+            "fn": 0,
+            "precision": 85.71,
+            "recall": 100.0,
+            "f1": 92.31
+          },
+          "Hindi": {
+            "n": 7,
+            "tp": 6,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 85.71,
+            "f1": 92.31
+          },
+          "Bengali": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Telugu": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Tamil": {
+            "n": 1,
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Marathi": {
+            "n": 2,
+            "tp": 1,
+            "fp": 1,
+            "fn": 1,
+            "precision": 50.0,
+            "recall": 50.0,
+            "f1": 50.0
+          },
+          "English": {
+            "n": 10,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Water Supply",
+            "Road Infrastructure",
+            "Electricity",
+            "Sanitation",
+            "Public Health",
+            "Ration / PDS"
+          ],
+          "matrix": [
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              5,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              7,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          ]
+        }
+      }
+    },
+    "gemini_mode": {
+      "overall": {
+        "n": 95,
+        "language_accuracy": 98.95,
+        "language_correct": 94,
+        "category_accuracy": 96.84,
+        "category_correct": 92,
+        "urgency_accuracy": 94.74,
+        "urgency_correct": 90,
+        "code_mixed_accuracy": 96.15,
+        "code_mixed_correct": 25,
+        "code_mixed_total": 26,
+        "location_accuracy": 100.0,
+        "location_correct": 10,
+        "location_total": 10,
+        "average_latency_ms": 286.32,
+        "per_category": {
+          "Water Supply": {
+            "n": 19,
+            "tp": 17,
+            "fp": 0,
+            "fn": 2,
+            "precision": 100.0,
+            "recall": 89.47,
+            "f1": 94.44
+          },
+          "Road Infrastructure": {
+            "n": 15,
+            "tp": 15,
+            "fp": 1,
+            "fn": 0,
+            "precision": 93.75,
+            "recall": 100.0,
+            "f1": 96.77
+          },
+          "Electricity": {
+            "n": 19,
+            "tp": 18,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 94.74,
+            "f1": 97.3
+          },
+          "Sanitation": {
+            "n": 17,
+            "tp": 17,
+            "fp": 2,
+            "fn": 0,
+            "precision": 89.47,
+            "recall": 100.0,
+            "f1": 94.44
+          },
+          "Public Health": {
+            "n": 13,
+            "tp": 13,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Ration / PDS": {
+            "n": 12,
+            "tp": 12,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_urgency": {
+          "Critical": {
+            "n": 35,
+            "tp": 35,
+            "fp": 2,
+            "fn": 0,
+            "precision": 94.59,
+            "recall": 100.0,
+            "f1": 97.22
+          },
+          "High": {
+            "n": 25,
+            "tp": 23,
+            "fp": 3,
+            "fn": 2,
+            "precision": 88.46,
+            "recall": 92.0,
+            "f1": 90.2
+          },
+          "Medium": {
+            "n": 30,
+            "tp": 27,
+            "fp": 0,
+            "fn": 3,
+            "precision": 100.0,
+            "recall": 90.0,
+            "f1": 94.74
+          },
+          "Low": {
+            "n": 5,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_language": {
+          "Odia": {
+            "n": 23,
+            "tp": 22,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 95.65,
+            "f1": 97.78
+          },
+          "Hindi": {
+            "n": 21,
+            "tp": 21,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Bengali": {
+            "n": 11,
+            "tp": 11,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Telugu": {
+            "n": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Tamil": {
+            "n": 1,
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Marathi": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "English": {
+            "n": 29,
+            "tp": 29,
+            "fp": 1,
+            "fn": 0,
+            "precision": 96.67,
+            "recall": 100.0,
+            "f1": 98.31
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Water Supply",
+            "Road Infrastructure",
+            "Electricity",
+            "Sanitation",
+            "Public Health",
+            "Ration / PDS"
+          ],
+          "matrix": [
+            [
+              17,
+              1,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              15,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              18,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              17,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              13,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              12
+            ]
+          ]
+        }
+      },
+      "train": {
+        "n": 65,
+        "language_accuracy": 98.46,
+        "language_correct": 64,
+        "category_accuracy": 95.38,
+        "category_correct": 62,
+        "urgency_accuracy": 92.31,
+        "urgency_correct": 60,
+        "code_mixed_accuracy": 95.24,
+        "code_mixed_correct": 20,
+        "code_mixed_total": 21,
+        "location_accuracy": 100.0,
+        "location_correct": 0,
+        "location_total": 0,
+        "average_latency_ms": 285.0,
+        "per_category": {
+          "Water Supply": {
+            "n": 13,
+            "tp": 11,
+            "fp": 0,
+            "fn": 2,
+            "precision": 100.0,
+            "recall": 84.62,
+            "f1": 91.67
+          },
+          "Road Infrastructure": {
+            "n": 10,
+            "tp": 10,
+            "fp": 1,
+            "fn": 0,
+            "precision": 90.91,
+            "recall": 100.0,
+            "f1": 95.24
+          },
+          "Electricity": {
+            "n": 12,
+            "tp": 11,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 91.67,
+            "f1": 95.65
+          },
+          "Sanitation": {
+            "n": 12,
+            "tp": 12,
+            "fp": 2,
+            "fn": 0,
+            "precision": 85.71,
+            "recall": 100.0,
+            "f1": 92.31
+          },
+          "Public Health": {
+            "n": 9,
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Ration / PDS": {
+            "n": 9,
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_urgency": {
+          "Critical": {
+            "n": 24,
+            "tp": 24,
+            "fp": 2,
+            "fn": 0,
+            "precision": 92.31,
+            "recall": 100.0,
+            "f1": 96.0
+          },
+          "High": {
+            "n": 15,
+            "tp": 13,
+            "fp": 3,
+            "fn": 2,
+            "precision": 81.25,
+            "recall": 86.67,
+            "f1": 83.87
+          },
+          "Medium": {
+            "n": 24,
+            "tp": 21,
+            "fp": 0,
+            "fn": 3,
+            "precision": 100.0,
+            "recall": 87.5,
+            "f1": 93.33
+          },
+          "Low": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_language": {
+          "Odia": {
+            "n": 17,
+            "tp": 16,
+            "fp": 0,
+            "fn": 1,
+            "precision": 100.0,
+            "recall": 94.12,
+            "f1": 96.97
+          },
+          "Hindi": {
+            "n": 14,
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Bengali": {
+            "n": 9,
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Telugu": {
+            "n": 6,
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Tamil": {
+            "n": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Marathi": {
+            "n": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "English": {
+            "n": 19,
+            "tp": 19,
+            "fp": 1,
+            "fn": 0,
+            "precision": 95.0,
+            "recall": 100.0,
+            "f1": 97.44
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Water Supply",
+            "Road Infrastructure",
+            "Electricity",
+            "Sanitation",
+            "Public Health",
+            "Ration / PDS"
+          ],
+          "matrix": [
+            [
+              11,
+              1,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              10,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              11,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              12,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              9
+            ]
+          ]
+        }
+      },
+      "held_out": {
+        "n": 30,
+        "language_accuracy": 100.0,
+        "language_correct": 30,
+        "category_accuracy": 100.0,
+        "category_correct": 30,
+        "urgency_accuracy": 100.0,
+        "urgency_correct": 30,
+        "code_mixed_accuracy": 100.0,
+        "code_mixed_correct": 5,
+        "code_mixed_total": 5,
+        "location_accuracy": 100.0,
+        "location_correct": 10,
+        "location_total": 10,
+        "average_latency_ms": 289.17,
+        "per_category": {
+          "Water Supply": {
+            "n": 6,
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Road Infrastructure": {
+            "n": 5,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Electricity": {
+            "n": 7,
+            "tp": 7,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Sanitation": {
+            "n": 5,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Public Health": {
+            "n": 4,
+            "tp": 4,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Ration / PDS": {
+            "n": 3,
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_urgency": {
+          "Critical": {
+            "n": 11,
+            "tp": 11,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "High": {
+            "n": 10,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Medium": {
+            "n": 6,
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Low": {
+            "n": 3,
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "per_language": {
+          "Odia": {
+            "n": 6,
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Hindi": {
+            "n": 7,
+            "tp": 7,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Bengali": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Telugu": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Tamil": {
+            "n": 1,
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "Marathi": {
+            "n": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          },
+          "English": {
+            "n": 10,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0,
+            "precision": 100.0,
+            "recall": 100.0,
+            "f1": 100.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Water Supply",
+            "Road Infrastructure",
+            "Electricity",
+            "Sanitation",
+            "Public Health",
+            "Ration / PDS"
+          ],
+          "matrix": [
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              5,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              7,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "gemini_urgency_errors": [
+    {
+      "id": "TEST-41",
+      "text": "Drinking water pipeline broken near municipal market causing flooding",
+      "expected": "Medium",
+      "predicted": "High"
+    },
+    {
+      "id": "TEST-44",
+      "text": "Open garbage dump near hospital creating severe infection risk",
+      "expected": "High",
+      "predicted": "Critical"
+    },
+    {
+      "id": "TEST-50",
+      "text": "Biometric machine broken at ration shop cannot take ration",
+      "expected": "Medium",
+      "predicted": "High"
+    },
+    {
+      "id": "TEST-54",
+      "text": "Pothole filled with rainwater, cars getting stuck",
+      "expected": "Medium",
+      "predicted": "High"
+    },
+    {
+      "id": "TEST-65",
+      "text": "Mosquito fogging needed in entire ward dengue outbreak",
+      "expected": "High",
+      "predicted": "Critical"
+    }
+  ],
+  "evaluation_timestamp": "2026-11-04 16:49:30"
+}

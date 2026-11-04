@@ -196,8 +196,13 @@ def get_chat_session(
     if not chat_session:
         raise HTTPException(status_code=404, detail="Chat session not found")
 
-    if current_user and current_user.role != "admin" and chat_session.user_id:
-        if chat_session.user_id != current_user.id and not chat_session.user_id.startswith("guest_"):
+    if not chat_session.user_id.startswith("guest_"):
+        if not current_user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication required to access this session."
+            )
+        if current_user.role != "admin" and chat_session.user_id != current_user.id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Forbidden: You do not have access to this chat session."

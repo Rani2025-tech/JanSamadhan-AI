@@ -36,6 +36,29 @@ export const FileComplaintForm: React.FC = () => {
   const [area, setArea] = useState('');
   const [pincode, setPincode] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setSelectedFile(null);
+      return;
+    }
+    const allowed = ['image/png', 'image/jpeg', 'application/pdf'];
+    if (!allowed.includes(file.type)) {
+      setError('Invalid file format. Only PNG, JPG, or PDF are accepted.');
+      setSelectedFile(null);
+      e.target.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('File size exceeds 5MB limit. Please upload a smaller file.');
+      setSelectedFile(null);
+      e.target.value = '';
+      return;
+    }
+    setError('');
+    setSelectedFile(file);
+  };
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -296,15 +319,19 @@ export const FileComplaintForm: React.FC = () => {
               <input
                 type="file"
                 id="file-upload"
+                accept="image/png,image/jpeg,application/pdf"
                 className="hidden"
-                onChange={e => setSelectedFile(e.target.files?.[0] || null)}
+                onChange={handleFileChange}
               />
               <label
                 htmlFor="file-upload"
                 className="cursor-pointer text-xs sm:text-sm font-bold text-maroon-800 hover:underline"
               >
-                {selectedFile ? `Attached: ${selectedFile.name}` : 'Click to upload photo or document (PNG, JPG, PDF up to 10MB)'}
+                {selectedFile ? `Attached: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)` : 'Click to attach photo or document (PNG, JPG, PDF up to 5MB)'}
               </label>
+              <p className="text-[11px] text-gray-500 mt-1">
+                (Demo notice: Attachments are previewed locally in browser; not uploaded to server)
+              </p>
             </div>
           </div>
 

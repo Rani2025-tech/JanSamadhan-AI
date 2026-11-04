@@ -22,10 +22,38 @@ from app.routes import (
 # Ensure database tables exist
 Base.metadata.create_all(bind=engine)
 
+from contextlib import asynccontextmanager
+import logging
+from app.database import SessionLocal
+from app.models import Complaint, User
+
+logger = logging.getLogger("jansamadhan")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup check: auto-seed if database is empty on ephemeral disks
+    db = SessionLocal()
+    try:
+        complaint_count = db.query(Complaint).count()
+        user_count = db.query(User).count()
+        if complaint_count == 0 or user_count == 0:
+            logger.info("Database is empty (users=%d, complaints=%d). Triggering auto-seed...", user_count, complaint_count)
+            from seed import seed_database
+            seed_database(force=False)
+            logger.info("Startup auto-seeding completed successfully.")
+        else:
+            logger.info("Database verified online with %d complaints and %d users.", complaint_count, user_count)
+    except Exception as e:
+        logger.error("Error during startup database auto-seed check: %s", e)
+    finally:
+        db.close()
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="Official API for JanSamadhan Multilingual Citizen Grievance Redressal Portal"
+    description="Official API for JanSamadhan Multilingual Citizen Grievance Redressal Portal",
+    lifespan=lifespan
 )
 
 # CORS Middleware

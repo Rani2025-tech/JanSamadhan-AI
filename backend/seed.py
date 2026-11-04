@@ -9,6 +9,8 @@ if backend_dir not in sys.path:
     sys.path.insert(0, backend_dir)
 
 from app.database import engine, Base, SessionLocal
+from app.config import settings
+from app.routes.auth import hash_password
 from app.models import (
     User,
     Complaint,
@@ -151,12 +153,13 @@ def generate_weighted_seed():
             id="EMP-4402",
             name="Dr. Alok Mohapatra, OAS",
             phone="9876500000",
-            email="alok.mohapatra@odisha.gov.in",
-            employee_id="OD-ADM-2024-88",
+            email=settings.ADMIN_EMAIL,
+            employee_id=settings.ADMIN_EMPLOYEE_ID,
             role="admin",
             department="Grievance & Public Administration",
             language="en",
-            district="State Secretariat, Bhubaneswar"
+            district="State Secretariat, Bhubaneswar",
+            password_hash=hash_password(settings.ADMIN_PASSWORD)
         )
         guest = User(
             id="GUEST-0001",
@@ -443,6 +446,19 @@ def generate_weighted_seed():
         raise e
     finally:
         db.close()
+
+def seed_database(force: bool = False):
+    """Idempotent seeder: skips if complaints and users already exist."""
+    db = SessionLocal()
+    try:
+        c_cnt = db.query(Complaint).count()
+        u_cnt = db.query(User).count()
+        if not force and c_cnt > 0 and u_cnt > 0:
+            print(f"[SEED] Database already populated (Complaints: {c_cnt}, Users: {u_cnt}). Skipping seed.")
+            return
+    finally:
+        db.close()
+    generate_weighted_seed()
 
 if __name__ == "__main__":
     generate_weighted_seed()

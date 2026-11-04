@@ -19,10 +19,11 @@ import {
 import { PLATFORM_STATS } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
 import { api } from '../services/api';
+import defaultEvalData from '../data/eval_results.json';
 
 export const ImpactPage: React.FC = () => {
   const { t } = useLanguage();
-  const [evalData, setEvalData] = useState<any>(null);
+  const [evalData, setEvalData] = useState<any>(defaultEvalData);
   const [adminStats, setAdminStats] = useState<any>(null);
   const [loadingEval, setLoadingEval] = useState(true);
 
@@ -165,7 +166,7 @@ export const ImpactPage: React.FC = () => {
               <span>JanSamadhan AI Evaluation Harness (Train vs Held-out Split)</span>
             </div>
             <p className="text-xs text-gray-500 mt-0.5">
-              Side-by-side evaluation across 85 multilingual test cases (Train: n=65, Held-out: n=20) comparing Rule-based Fallback vs Gemini LLM modes. All metrics show exact raw fractions (correct/total) computed in code.
+              Side-by-side evaluation across 95 multilingual test cases (Train: n=65, Held-out: n=30) comparing Rule-based Fallback vs Gemini LLM modes. All metrics show exact raw fractions (correct/total) computed in code.
             </p>
           </div>
 
@@ -189,8 +190,8 @@ export const ImpactPage: React.FC = () => {
                 <tr className="bg-cream-200/90 text-maroon-900 font-bold">
                   <th className="py-3 px-4">Evaluation Metric</th>
                   <th className="py-3 px-4">Fallback Mode (Train n=65)</th>
-                  <th className="py-3 px-4">Fallback Mode (Held-out n=20)</th>
-                  <th className="py-3 px-4">Gemini Mode (Overall n=85)</th>
+                  <th className="py-3 px-4">Fallback Mode (Held-out n=30)</th>
+                  <th className="py-3 px-4">Gemini Mode (Overall n=95)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 font-medium text-gray-800">
@@ -201,72 +202,72 @@ export const ImpactPage: React.FC = () => {
                     <span className="text-gray-500 font-semibold text-[11px]">(65/65, n=65)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-emerald-700">100.0%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(20/20, n=20)</span>
+                    <span className="font-extrabold text-emerald-700">93.33%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(28/30, n=30)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-blue-700">98.82%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(84/85, n=85)</span>
+                    <span className="font-extrabold text-blue-700">98.95%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(94/95, n=95)</span>
                   </td>
                 </tr>
                 <tr className="hover:bg-cream-50">
                   <td className="py-2.5 px-4 font-bold text-gray-900">Category Classification (6 Civic Classes)</td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-emerald-700">93.85%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(61/65, n=65)</span>
+                    <span className="font-extrabold text-emerald-700">90.77%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(59/65, n=65)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-emerald-700">95.0%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(19/20, n=20)</span>
+                    <span className="font-extrabold text-emerald-700">100.0%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(30/30, n=30)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-blue-700">96.47%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(82/85, n=85)</span>
+                    <span className="font-extrabold text-blue-700">96.84%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(92/95, n=95)</span>
                   </td>
                 </tr>
                 <tr className="hover:bg-cream-50">
                   <td className="py-2.5 px-4 font-bold text-gray-900">Urgency Detection (Exact Integer Match)</td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-emerald-700">95.38%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(62/65, n=65)</span>
+                    <span className="font-extrabold text-amber-700">26.15%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(17/65, n=65)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-amber-700">45.0%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(9/20, n=20)</span>
+                    <span className="font-extrabold text-amber-700">56.67%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(17/30, n=30)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-blue-700">94.12%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(80/85, n=85)</span>
+                    <span className="font-extrabold text-blue-700">94.74%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(90/95, n=95)</span>
                   </td>
                 </tr>
                 <tr className="hover:bg-cream-50">
                   <td className="py-2.5 px-4 font-bold text-gray-900">Code-Mixed / Transliterated Grievances</td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-emerald-700">90.48%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(19/21, n=21)</span>
+                    <span className="font-extrabold text-emerald-700">95.24%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(20/21, n=21)</span>
                   </td>
                   <td className="py-2.5 px-4">
                     <span className="font-extrabold text-emerald-700">100.0%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(4/4, n=4)</span>
+                    <span className="text-gray-500 font-semibold text-[11px]">(5/5, n=5)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-blue-700">96.0%</span>{' '}
-                    <span className="text-gray-500 font-semibold text-[11px]">(24/25, n=25)</span>
+                    <span className="font-extrabold text-blue-700">96.15%</span>{' '}
+                    <span className="text-gray-500 font-semibold text-[11px]">(25/26, n=26)</span>
                   </td>
                 </tr>
                 <tr className="hover:bg-cream-50">
                   <td className="py-2.5 px-4 font-bold text-gray-900">Average Processing Latency</td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-gray-700">0.06 ms</span>{' '}
+                    <span className="font-extrabold text-gray-700">20.5 ms</span>{' '}
                     <span className="text-gray-400 text-[11px]">(n=65)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-gray-700">0.08 ms</span>{' '}
-                    <span className="text-gray-400 text-[11px]">(n=20)</span>
+                    <span className="font-extrabold text-gray-700">15.4 ms</span>{' '}
+                    <span className="text-gray-400 text-[11px]">(n=30)</span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="font-extrabold text-gray-700">285.0 ms</span>{' '}
-                    <span className="text-gray-400 text-[11px]">(n=85)</span>
+                    <span className="font-extrabold text-gray-700">286.3 ms</span>{' '}
+                    <span className="text-gray-400 text-[11px]">(n=95)</span>
                   </td>
                 </tr>
               </tbody>
@@ -278,7 +279,7 @@ export const ImpactPage: React.FC = () => {
         <div className="space-y-3 pt-2">
           <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
             <Award className="w-4 h-4 text-maroon-800" />
-            <span>Held-Out Per-Class Precision & Recall (n=20 Unseen Complaints)</span>
+            <span>Held-Out Per-Class Precision & Recall (n=30 Unseen Complaints)</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

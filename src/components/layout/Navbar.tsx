@@ -1,3 +1,4 @@
+import { api } from '../../services/api';
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, Bell, ChevronDown, User, LogOut, Shield, Globe, Sparkles } from 'lucide-react';
@@ -20,6 +21,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [geminiActive, setGeminiActive] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    api.checkHealth()
+      .then(res => setGeminiActive(res?.gemini_active ?? false))
+      .catch(() => setGeminiActive(false));
+  }, []);
 
   const langRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
@@ -166,8 +174,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
           </form>
         </div>
 
-        {/* Right: Accessibility toolbar + Notifications + User Avatar */}
+        {/* Right: Accessibility toolbar + AI Status Pill + Notifications + User Avatar */}
         <div className="flex items-center gap-3 sm:gap-4">
+          {/* AI Engine Status Pill */}
+          {geminiActive !== null && (
+            <div
+              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-colors ${
+                geminiActive
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                  : 'bg-amber-50 text-amber-800 border-amber-200'
+              }`}
+              title={geminiActive ? 'AI Engine: Google Gemini live' : 'AI Engine: Deterministic rule-based multilingual fallback'}
+            >
+              <span className={`w-2 h-2 rounded-full ${geminiActive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+              <span>{geminiActive ? 'AI: Gemini live' : 'AI: offline fallback'}</span>
+            </div>
+          )}
           {/* Accessibility bar in top header (hidden on very small screens, visible on sm+) */}
           <div className="hidden lg:block">
             <AccessibilityBar />

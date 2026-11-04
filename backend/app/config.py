@@ -16,14 +16,14 @@ class Settings:
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./jansamadhan.db")
     
-    # JWT Auth (env-driven)
-    JWT_SECRET: str = os.getenv("JWT_SECRET", "jansamadhan_super_secure_jwt_secret_key_2026")
+    # JWT Auth (Must be set in environment; no static hardcoded default)
+    JWT_SECRET: str = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or ""
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
-    # Admin Credentials (env-driven)
+    # Admin Credentials (Must be set in environment; no static hardcoded default)
     ADMIN_EMPLOYEE_ID: str = os.getenv("ADMIN_EMPLOYEE_ID", "OD-ADM-2024-88")
-    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "Admin@2026")
+    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "")
     ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "alok.mohapatra@odisha.gov.in")
     
     # AI / Gemini
@@ -42,3 +42,16 @@ class Settings:
     ]
 
 settings = Settings()
+
+# Fail-fast security validation: Ensure critical secrets are configured
+if not settings.JWT_SECRET:
+    raise RuntimeError(
+        "FATAL: JWT_SECRET (or SECRET_KEY) environment variable is required. "
+        "Please configure it in your .env file or environment."
+    )
+
+if not settings.ADMIN_PASSWORD:
+    raise RuntimeError(
+        "FATAL: ADMIN_PASSWORD environment variable is required. "
+        "Please configure it in your .env file or environment."
+    )

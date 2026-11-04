@@ -26,6 +26,7 @@ class User(Base):
     state = Column(String(64), default="Odisha", nullable=True)
     district = Column(String(64), nullable=True)
     department = Column(String(128), nullable=True)
+    password_hash = Column(String(256), nullable=True)
     avatar = Column(String(512), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

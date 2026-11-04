@@ -17,7 +17,7 @@ from app.schemas import (
     AssignedOfficerSchema,
     StatusHistoryItemSchema
 )
-from app.routes.auth import get_current_user
+from app.routes.auth import get_current_user, get_current_user_required, require_admin
 from ai import extract, check_duplicate_complaint, translate
 
 router = APIRouter(prefix="/complaints", tags=["Complaints"])
@@ -92,25 +92,22 @@ def get_complaints(
     search: Optional[str] = Query(None),
     limit: int = Query(100),
     offset: int = Query(0),
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db)
 ):
     query = db.query(Complaint)
 
     # 1. Enforce Role-Based Scoping
-    if current_user and current_user.role == "admin":
+    if current_user.role == "admin":
         # Admin can view all or filter by user_id
         if user_id:
             query = query.filter(Complaint.user_id == user_id)
-    elif current_user:
-        # Citizen or Guest can ONLY view their own records
+    else:
+        # Citizen or Guest can ONLY view their own records (ignore user_id param)
         ownership_clauses = [Complaint.user_id == current_user.id]
         if current_user.phone:
             ownership_clauses.append(Complaint.citizen_phone == current_user.phone)
         query = query.filter(or_(*ownership_clauses))
-    else:
-        # Unauthenticated users see an empty list
-        return []
 
     if status and status != "All":
         query = query.filter(Complaint.status.ilike(status))
@@ -139,7 +136,7 @@ def get_complaints(
 @router.get("/{complaint_id}", response_model=ComplaintResponse)
 def get_complaint(
     complaint_id: str,
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db)
 ):
     comp = db.query(Complaint).filter(Complaint.id.ilike(complaint_id)).first()
@@ -284,15 +281,45 @@ def create_complaint(
     db.refresh(new_comp)
     return format_complaint_response(new_comp)
 
+ALLOWED_TRANSITIONS = {
+    "Submitted": ["Assigned"],
+    "Assigned": ["In Progress"],
+    "In Progress": ["Resolved"],
+    "Resolved": ["In Progress"],  # Reopen with remark
+}
+VALID_STATUSES = {"Submitted", "Assigned", "In Progress", "Resolved"}
+
 @router.put("/{complaint_id}/status", response_model=ComplaintResponse)
 def update_complaint_status(
     complaint_id: str,
     update_data: ComplaintStatusUpdate,
+    admin_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     comp = db.query(Complaint).filter(Complaint.id.ilike(complaint_id)).first()
     if not comp:
         raise HTTPException(status_code=404, detail="Complaint not found")
+
+    # State Machine Validation
+    if update_data.status not in VALID_STATUSES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid status '{update_data.status}'. Must be one of: {sorted(list(VALID_STATUSES))}"
+        )
+
+    allowed = ALLOWED_TRANSITIONS.get(comp.status, [])
+    if update_data.status not in allowed:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid status transition from '{comp.status}' to '{update_data.status}'. Allowed transitions: {allowed}"
+        )
+
+    if comp.status == "Resolved" and update_data.status == "In Progress":
+        if not update_data.officer_note or not update_data.officer_note.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Reopening a resolved complaint requires an officer remark."
+            )
 
     now = datetime.datetime.utcnow()
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -351,13 +378,14 @@ def update_complaint_status(
 def admin_update_complaint(
     complaint_id: str,
     update_data: ComplaintAdminUpdate,
+    admin_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     comp = db.query(Complaint).filter(Complaint.id.ilike(complaint_id)).first()
     if not comp:
         raise HTTPException(status_code=404, detail="Complaint not found")
 
-    admin_id = "ADM-EMP-001"
+    admin_id = admin_user.employee_id or admin_user.id or "ADMIN"
     # Track category correction
     if update_data.category and update_data.category != comp.category:
         db.add(AdminCorrection(
@@ -394,17 +422,41 @@ def admin_update_complaint(
 def submit_complaint_feedback(
     complaint_id: str,
     fb: ComplaintFeedback,
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db)
 ):
     comp = db.query(Complaint).filter(Complaint.id.ilike(complaint_id)).first()
     if not comp:
         raise HTTPException(status_code=404, detail="Complaint not found")
 
-    if current_user and current_user.role != "admin":
-        is_owner = (comp.user_id == current_user.id) or (current_user.phone and comp.citizen_phone == current_user.phone)
-        if not is_owner:
-            raise HTTPException(status_code=403, detail="Forbidden: You cannot submit feedback for this complaint.")
+    # 1. Rating must be 1 to 5
+    if fb.rating < 1 or fb.rating > 5:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Rating must be an integer between 1 and 5."
+        )
+
+    # 2. Only owner can submit feedback
+    is_owner = (comp.user_id == current_user.id) or (current_user.phone and comp.citizen_phone == current_user.phone)
+    if not is_owner and current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: You can only submit feedback for your own complaint."
+        )
+
+    # 3. Only resolved complaints can accept feedback
+    if comp.status != "Resolved":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Feedback can only be submitted once the grievance is Resolved."
+        )
+
+    # 4. Only once (409 Conflict on repeat)
+    if comp.feedback_rating is not None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Feedback has already been submitted for this grievance."
+        )
 
     comp.feedback_rating = fb.rating
     comp.feedback_comment = fb.comment

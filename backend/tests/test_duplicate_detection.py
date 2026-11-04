@@ -278,7 +278,14 @@ def run_duplicate_tests():
     tn = 0
     neg_results = []
 
+    # Clean positive test complaints so negative tests run in strict isolation
+    db.query(Complaint).filter(Complaint.id.like("GRV-POS-%")).delete()
+    db.commit()
+
     for idx, p in enumerate(NEGATIVE_PAIRS, 1):
+        # Isolate each negative test: clear previous NEG test complaints
+        db.query(Complaint).filter(Complaint.id.like("GRV-NEG-%")).delete()
+        db.commit()
         comp_id = f"GRV-NEG-{idx:02d}"
         comp_a = Complaint(
             id=comp_id,
@@ -345,6 +352,9 @@ def run_duplicate_tests():
     assert recall >= 90.0, f"Expected recall >= 90%, got {recall}%"
     assert fpr <= 10.0, f"Expected FPR <= 10%, got {fpr}%"
     print("ALL 20 DUPLICATE DETECTION TESTS PASSED VERIFICATION!")
+
+def test_duplicate_suite():
+    run_duplicate_tests()
 
 if __name__ == "__main__":
     run_duplicate_tests()
