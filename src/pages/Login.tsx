@@ -21,7 +21,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useAuth } from '../context/AuthContext';
 import { SUPPORTED_LANGUAGES } from '../i18n/languages';
-import loginBg from '../assets/images/logo-bg.png';
+import loginBg from '../assets/images/login-bg.webp';
 
 const ROW_1_LANG_CODES = ['hi', 'or', 'bn', 'mr'];
 const ROW_2_LANG_CODES = ['ta', 'te', 'en'];
