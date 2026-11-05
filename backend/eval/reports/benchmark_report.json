@@ -1,0 +1,447 @@
+{
+  "timestamp": "2026-11-05 17:33:36",
+  "sample_size": 10,
+  "methods": {
+    "Rules (Offline Fallback)": {
+      "method_name": "Rules (Offline Fallback)",
+      "sample_size": 10,
+      "correct": 9,
+      "accuracy": 90.0,
+      "latency_ms": {
+        "mean": 25.7,
+        "p95": 38.03,
+        "p99": 38.1
+      },
+      "by_language": {
+        "Odia": {
+          "total": 10,
+          "correct": 9,
+          "accuracy": 90.0
+        },
+        "Hindi": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Bengali": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Telugu": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Tamil": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Marathi": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "English": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        }
+      },
+      "by_category": {
+        "Water Supply": {
+          "total": 3,
+          "correct": 2,
+          "accuracy": 66.67
+        },
+        "Road Infrastructure": {
+          "total": 2,
+          "correct": 2,
+          "accuracy": 100.0
+        },
+        "Electricity": {
+          "total": 2,
+          "correct": 2,
+          "accuracy": 100.0
+        },
+        "Sanitation": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        },
+        "Public Health": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        },
+        "Ration / PDS": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Water Supply",
+          "Road Infrastructure",
+          "Electricity",
+          "Sanitation",
+          "Public Health",
+          "Ration / PDS"
+        ],
+        "matrix": [
+          [
+            2,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "errors": [
+        {
+          "id": "TEST-02",
+          "language": "Odia",
+          "input": "ପାଣିରେ କାଦୁଅ ଓ ଦୁର୍ଗନ୍ଧ ବାହାରୁଛି ପିଲାମାନେ ଅସୁସ୍ଥ ହେଉଛନ୍ତି",
+          "expected": "Water Supply",
+          "predicted": "Sanitation",
+          "confidence": 0.81
+        }
+      ]
+    },
+    "scikit-learn Baseline": {
+      "method_name": "scikit-learn Baseline",
+      "sample_size": 10,
+      "correct": 10,
+      "accuracy": 100.0,
+      "latency_ms": {
+        "mean": 2.75,
+        "p95": 12.05,
+        "p99": 19.27
+      },
+      "by_language": {
+        "Odia": {
+          "total": 10,
+          "correct": 10,
+          "accuracy": 100.0
+        },
+        "Hindi": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Bengali": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Telugu": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Tamil": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Marathi": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "English": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        }
+      },
+      "by_category": {
+        "Water Supply": {
+          "total": 3,
+          "correct": 3,
+          "accuracy": 100.0
+        },
+        "Road Infrastructure": {
+          "total": 2,
+          "correct": 2,
+          "accuracy": 100.0
+        },
+        "Electricity": {
+          "total": 2,
+          "correct": 2,
+          "accuracy": 100.0
+        },
+        "Sanitation": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        },
+        "Public Health": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        },
+        "Ration / PDS": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Water Supply",
+          "Road Infrastructure",
+          "Electricity",
+          "Sanitation",
+          "Public Health",
+          "Ration / PDS"
+        ],
+        "matrix": [
+          [
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "errors": []
+    },
+    "Gemini Live LLM": {
+      "method_name": "Gemini Live LLM",
+      "sample_size": 10,
+      "correct": 9,
+      "accuracy": 90.0,
+      "latency_ms": {
+        "mean": 22.18,
+        "p95": 26.65,
+        "p99": 27.27
+      },
+      "by_language": {
+        "Odia": {
+          "total": 10,
+          "correct": 9,
+          "accuracy": 90.0
+        },
+        "Hindi": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Bengali": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Telugu": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Tamil": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "Marathi": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        },
+        "English": {
+          "total": 0,
+          "correct": 0,
+          "accuracy": null
+        }
+      },
+      "by_category": {
+        "Water Supply": {
+          "total": 3,
+          "correct": 2,
+          "accuracy": 66.67
+        },
+        "Road Infrastructure": {
+          "total": 2,
+          "correct": 2,
+          "accuracy": 100.0
+        },
+        "Electricity": {
+          "total": 2,
+          "correct": 2,
+          "accuracy": 100.0
+        },
+        "Sanitation": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        },
+        "Public Health": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        },
+        "Ration / PDS": {
+          "total": 1,
+          "correct": 1,
+          "accuracy": 100.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Water Supply",
+          "Road Infrastructure",
+          "Electricity",
+          "Sanitation",
+          "Public Health",
+          "Ration / PDS"
+        ],
+        "matrix": [
+          [
+            2,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "errors": [
+        {
+          "id": "TEST-02",
+          "language": "Odia",
+          "input": "ପାଣିରେ କାଦୁଅ ଓ ଦୁର୍ଗନ୍ଧ ବାହାରୁଛି ପିଲାମାନେ ଅସୁସ୍ଥ ହେଉଛନ୍ତି",
+          "expected": "Water Supply",
+          "predicted": "Sanitation",
+          "confidence": 0.81
+        }
+      ]
+    }
+  }
+}
