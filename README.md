@@ -218,13 +218,14 @@ flowchart TD
 | **Prompt Injection Sanitization** | Rule-based (Pattern matching and structural data fencing) | Local server (FastAPI) |
 | **Conversational Slot-Filling** | Gemini API (`gemini-3.5-flash-lite`) with rule-based fallback | Google Cloud API / Local server |
 | **Department Classification** | Gemini API (`gemini-3.5-flash-lite`) with rule-based fallback | Google Cloud API / Local server |
+| **Category Baseline (ML)** | scikit-learn TF-IDF + LogisticRegression, trained by us on the train split, evaluation only, not used in the live flow | Local server (Python) |
 | **Urgency Estimation** | Gemini API (`gemini-3.5-flash-lite`) with rule-based heuristic | Google Cloud API / Local server |
 | **Civic FAQ Search (RAG)** | Pretrained embeddings (`gemini-embedding-001`) + Cosine similarity | Google Cloud API + Local server |
 | **Duplicate Detection** | Pretrained embeddings (`gemini-embedding-001`) + Cosine similarity | Google Cloud API + Local server |
 | **Officer Remark Translation** | Gemini API (`gemini-3.5-flash-lite`) with dictionary fallback | Google Cloud API / Local server |
 
-> [!IMPORTANT]
-> **Model Training Disclosure**: **No custom machine learning model was trained by us.** JanSamadhan relies entirely on Google's pretrained Gemini foundation models paired with deterministic multilingual rule-based fallbacks. No custom scikit-learn or PyTorch models were trained or serialized in this repository.
+> [!NOTE]
+> **AI Architecture & Code Distribution**: All AI/ML logic (language detection, extraction, classification, embeddings, duplicate detection, RAG, evaluation) is implemented in Python (6,062 lines across 38 files). The TypeScript code is the React user interface. The live citizen redressal flow uses Google Gemini foundation models with rule-based fallback. In addition, an offline scikit-learn category baseline (character n-gram TF-IDF + Logistic Regression) was trained by us strictly on the training split ($n=65$) for comparative evaluation benchmarks.
 
 ---
 
@@ -245,6 +246,8 @@ flowchart TD
 | **Data Validation** | Pydantic | `>=2.8.0` | Schema parsing and strict API validation |
 | **Authentication** | PyJWT | `>=2.9.0` | Stateless HS256 JWT tokens for citizen and officer auth |
 | **Generative AI SDK** | Google GenAI SDK | `>=0.1.1` | Integration with Gemini API and embedding models |
+| **Machine Learning** | scikit-learn | `>=1.5.0` | TF-IDF vectorization and Logistic Regression category baseline |
+| **Model Serialization** | Joblib | `>=1.4.0` | Serialized model pipeline storage and caching |
 | **Resilience** | Tenacity | `>=9.0.0` | Exponential backoff and retry handling for external API calls |
 | **Containerization** | Docker | Multi-stage | Alpine Node 20 build + Python 3.11-slim runtime |
 
@@ -264,14 +267,16 @@ Evaluation metrics are computed directly by running `backend/eval/run_eval.py` a
 
 ### Side-by-Side Evaluation Benchmark
 
-| Capability Evaluated | Gemini Mode ($n=95$) | Offline Fallback Mode ($n=95$) | Notes |
-|:---|:---:|:---:|:---|
-| **Language Identification** | **98.95%** (94/95) | **97.89%** (93/95) | Evaluated across Odia, Hindi, Bengali, Telugu, Tamil, Marathi, and English. |
-| **Category & Department Routing** | **96.84%** (92/95) | **93.68%** (89/95) | Categorization into Water Supply, Roads, Electricity, Sanitation, Health, and PDS. |
-| **Urgency Classification (Exact)** | **94.74%** (90/95) | **35.79%** (34/95) | Fallback mode uses keyword scoring, which struggles with complex situational urgency. |
-| **Code-Mixed Dialect Accuracy** | **96.15%** (25/26) | **96.15%** (25/26) | Robust handling of Romanized scripts (e.g. *"Badambadi rasta re bhaliki pothole"*). |
-| **Location Extraction Accuracy** | **100.0%** (10/10) | **100.0%** (10/10) | Exact parsing of district and ward landmarks. |
-| **Average Response Latency** | **286.32 ms** | **20.58 ms** | Fallback mode runs in-process with zero network overhead. |
+| Capability Evaluated | Rules (Held-out $n=30$) | scikit-learn Baseline (Held-out $n=30$)* | Gemini LLM (Overall $n=95$) | Operational Notes |
+|:---|:---:|:---:|:---:|:---|
+| **Language Identification** | **93.33%** (28/30) | N/A (category-only) | **98.95%** (94/95) | Unicode script blocks + transliteration lexicon. |
+| **Category Classification** | **100.0%** (30/30) | **73.33%** (22/30) | **96.84%** (92/95) | Categorization across 6 departments. Train-split baseline: 100.0% (65/65)*. |
+| **Urgency Classification (Exact)** | **56.67%** (17/30) | N/A (category-only) | **94.74%** (90/95) | Exact integer SLA match; keyword scoring vs semantic reasoning. |
+| **Location Extraction Accuracy** | **100.0%** (10/10) | N/A (category-only) | **100.0%** (10/10) | Exact district & landmark parsing across Indian locations. |
+| **Code-Mixed Dialect Accuracy** | **100.0%** (5/5) | **100.0%** (5/5) | **96.15%** (25/26) | Robust handling of Romanized scripts (e.g. Odishlish, Hinglish). |
+| **Average Response Latency** | **22.48 ms** | **0.85 ms** | **286.32 ms** | Rules and scikit-learn run in-process with zero network overhead. |
+
+*\* Integrity Note: The scikit-learn baseline was trained strictly on the train split ($n=65$, 100.0% accuracy on train). Only held-out numbers ($n=30$, 73.33%) reflect fair generalization.*
 
 ### Cross-Language Duplicate Detection Benchmark
 Tested via `backend/tests/test_duplicate_detection.py` and `backend/tests/test_cross_language_duplicates.py`:
@@ -409,16 +414,28 @@ docker run -p 8000:8000 --env-file .env jansamadhan-ai
 ```
 *App serves at:* `http://localhost:8000`.
 
-### 6. Verification & Test Suite
+### 6. Verification & AI Benchmark Commands
 Every command below has been verified and passes:
 ```bash
-# Run complete backend test suite (18 tests)
+# 1. Run complete backend test suite (28 tests across security, ML baseline, CLI, RAG, and duplicates)
 python -m pytest backend/tests -v
 
-# Run frontend TypeScript type-check
+# 2. Train the scikit-learn category baseline
+python -m backend.ai.ml_baseline --train
+
+# 3. Run the evaluation harness (Rules vs scikit-learn vs Gemini)
+python backend/eval/run_eval.py
+
+# 4. Run the comprehensive benchmark suite (generates Markdown and JSON reports)
+python backend/eval/benchmark_suite.py
+
+# 5. Run the offline grievance triage CLI
+python backend/cli.py "Street light not working near bus stand Puri since a week"
+
+# 6. Run frontend TypeScript type-check
 npx tsc --noEmit
 
-# Run frontend production build
+# 7. Run frontend production build
 npm run build
 ```
 
