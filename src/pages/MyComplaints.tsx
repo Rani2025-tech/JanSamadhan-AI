@@ -10,12 +10,10 @@ import {
   Globe,
   ChevronRight,
   FileDown,
-  ArrowUpDown,
 } from 'lucide-react';
 import { useComplaints } from '../context/ComplaintContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StatusBadge } from '../components/common/StatusBadge';
-import { ComplaintStatus } from '../types';
 
 export const MyComplaints: React.FC = () => {
   const { complaints, loading } = useComplaints();

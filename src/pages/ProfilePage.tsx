@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
 import {
   User,
-  Phone,
-  Mail,
-  MapPin,
   Globe,
   Shield,
   Save,
   CheckCircle2,
-  Sliders,
-  BellRing,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { useAccessibility } from '../context/AccessibilityContext';
 import { SUPPORTED_LANGUAGES } from '../i18n/languages';
 import { INDIA_STATES, ALL_STATE_NAMES } from '../data/indiaLocations';
-import { LanguageCode } from '../types';
 
 export const ProfilePage: React.FC = () => {
   const { user, role, updateUserProfile } = useAuth();
   const { currentLanguage, setLanguage, t } = useLanguage();
-  const { fontSize, setFontSize, highContrast, toggleHighContrast } = useAccessibility();
 
   const [name, setName] = useState(user?.name || '');
   const [phone, setPhone] = useState(user?.phone || '');

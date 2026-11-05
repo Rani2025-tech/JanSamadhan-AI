@@ -3,18 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   Shield,
   Search,
-  Filter,
-  CheckCircle2,
-  Clock,
   AlertTriangle,
-  ArrowRight,
-  Send,
   X,
-  Building2,
 } from 'lucide-react';
 import { useComplaints } from '../context/ComplaintContext';
 import { StatusBadge } from '../components/common/StatusBadge';
-import { Complaint, ComplaintStatus, UrgencyLevel } from '../types';
+import { Complaint, ComplaintStatus } from '../types';
 
 export const AdminComplaints: React.FC = () => {
   const { complaints, updateStatus, adminUpdateComplaint } = useComplaints();

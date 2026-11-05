@@ -12,7 +12,6 @@ import {
   ChevronUp,
   Filter,
   Flame,
-  CheckCircle2,
   Clock,
   ArrowUpDown,
   Building,

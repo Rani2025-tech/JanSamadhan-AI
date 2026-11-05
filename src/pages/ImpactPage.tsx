@@ -17,7 +17,6 @@ import {
   GitCompare,
 } from 'lucide-react';
 import { PLATFORM_STATS } from '../data/mockData';
-import { useLanguage } from '../context/LanguageContext';
 import { api } from '../services/api';
 import defaultEvalData from '../data/eval_results.json';
 
@@ -46,12 +45,10 @@ interface ImpactStatesResponse {
 }
 
 export const ImpactPage: React.FC = () => {
-  const { t } = useLanguage();
   const [evalData, setEvalData] = useState<any>(defaultEvalData);
   const [adminStats, setAdminStats] = useState<any>(null);
   const [impactData, setImpactData] = useState<ImpactStatesResponse | null>(null);
   const [selectedState, setSelectedState] = useState<string>('Odisha');
-  const [loadingEval, setLoadingEval] = useState(true);
 
   useEffect(() => {
     api.getAdminStats()
@@ -69,8 +66,7 @@ export const ImpactPage: React.FC = () => {
 
     api.getEvalResults()
       .then(res => setEvalData(res))
-      .catch(() => {})
-      .finally(() => setLoadingEval(false));
+      .catch(() => {});
   }, []);
 
   const allStates = impactData?.all_states && impactData.all_states.length > 0

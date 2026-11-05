@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Complaint, ComplaintStatus, UrgencyLevel } from '../types';
-import { useNotifications } from './NotificationContext';
 import { useAuth } from './AuthContext';
 import { api } from '../services/api';
 
@@ -42,7 +41,6 @@ const ComplaintContext = createContext<ComplaintContextType | undefined>(undefin
 const STORAGE_KEY = 'jansamadhan_complaints';
 
 export const ComplaintProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { addNotification } = useNotifications();
   const { user, role } = useAuth();
   const [loading, setLoading] = useState(false);
 

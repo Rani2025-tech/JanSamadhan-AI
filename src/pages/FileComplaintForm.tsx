@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import {
   FilePlus2,
   Upload,
-  Mic,
   CheckCircle2,
   AlertCircle,
   Building2,
   MapPin,
   Clock,
-  Compass,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useComplaints } from '../context/ComplaintContext';

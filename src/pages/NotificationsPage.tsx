@@ -5,9 +5,7 @@ import {
   CheckCheck,
   Radio,
   FileText,
-  Clock,
   ArrowRight,
-  ShieldAlert,
 } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';

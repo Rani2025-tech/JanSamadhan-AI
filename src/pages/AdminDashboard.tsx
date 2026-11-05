@@ -1,29 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Shield,
-  BarChart3,
   Users,
   CheckCircle2,
   Clock,
   AlertTriangle,
   ArrowRight,
   TrendingUp,
-  MapPin,
-  Filter,
-  FileText,
 } from 'lucide-react';
 import { useComplaints } from '../context/ComplaintContext';
-import { useAuth } from '../context/AuthContext';
-import { PLATFORM_STATS, HOTSPOT_DATA } from '../data/mockData';
+import { PLATFORM_STATS } from '../data/mockData';
 import { StatusBadge } from '../components/common/StatusBadge';
 
 export const AdminDashboard: React.FC = () => {
   const { complaints } = useComplaints();
-  const { user, role, loginAdmin } = useAuth();
   const navigate = useNavigate();
-
-  const [selectedDeptFilter, setSelectedDeptFilter] = useState('All');
 
   const deptMetrics = [
     { name: 'PHED (Water)', total: 3420, open: 610, resolved: 2810, sla: '95%' },

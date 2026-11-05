@@ -24,7 +24,6 @@ import { useLanguage } from '../context/LanguageContext';
 import { useComplaints } from '../context/ComplaintContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { UrgencyLevel } from '../types';
 
 interface Message {
   sender: 'ai' | 'user';

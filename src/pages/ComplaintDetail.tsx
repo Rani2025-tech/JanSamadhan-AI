@@ -4,15 +4,12 @@ import {
   ArrowLeft,
   Calendar,
   Clock,
-  Briefcase,
-  MapPin,
   User,
   Phone,
   ShieldCheck,
   FileCheck2,
   Printer,
   Star,
-  MessageSquare,
   AlertCircle,
   CheckCircle2,
   Send,
@@ -49,7 +46,7 @@ export const ComplaintDetail: React.FC = () => {
           setComplaint(data);
           setErrorMsg(null);
         })
-        .catch(err => {
+        .catch(() => {
           setErrorMsg('You do not have permission to view this grievance, or it does not exist.');
         })
         .finally(() => {
